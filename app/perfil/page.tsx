@@ -1,6 +1,7 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useSearchParams, useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -15,8 +16,32 @@ import { cn } from "@/lib/utils"
 type AlertFilter = "todos" | "nao-lidos" | "urgentes"
 
 export default function PerfilPage() {
-  const [activeTab, setActiveTab] = useState<"dados" | "favoritos" | "alertas">("dados")
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  const tabFromUrl = searchParams.get("tab") as "dados" | "favoritos" | "alertas" | null
+
+  const [activeTab, setActiveTab] = useState<"dados" | "favoritos" | "alertas">(tabFromUrl || "dados")
   const [alertFilter, setAlertFilter] = useState<AlertFilter>("todos")
+  const [isSaving, setIsSaving] = useState(false)
+
+  useEffect(() => {
+    if (tabFromUrl && tabFromUrl !== activeTab) {
+      setActiveTab(tabFromUrl)
+    }
+  }, [tabFromUrl])
+
+  const handleTabChange = (tab: "dados" | "favoritos" | "alertas") => {
+    setActiveTab(tab)
+    router.push(`/perfil?tab=${tab}`, { scroll: false })
+  }
+
+  const handleSave = () => {
+    setIsSaving(true)
+    setTimeout(() => {
+      setIsSaving(false)
+      alert("✅ Dados salvos com sucesso!")
+    }, 1000)
+  }
 
   const favoriteProjects = [
     {
@@ -162,7 +187,7 @@ export default function PerfilPage() {
               <nav className="bg-white p-3 rounded-xl shadow-sm border border-gray-200 space-y-1">
                 <Button
                   variant="ghost"
-                  onClick={() => setActiveTab("dados")}
+                  onClick={() => handleTabChange("dados")}
                   className={cn(
                     "w-full justify-start font-medium",
                     activeTab === "dados" ? "bg-blue-50 text-primary" : "text-gray-700 hover:text-primary hover:bg-gray-50"
@@ -172,7 +197,7 @@ export default function PerfilPage() {
                 </Button>
                 <Button
                   variant="ghost"
-                  onClick={() => setActiveTab("alertas")}
+                  onClick={() => handleTabChange("alertas")}
                   className={cn(
                     "w-full justify-start font-medium relative",
                     activeTab === "alertas" ? "bg-blue-50 text-primary" : "text-gray-700 hover:text-primary hover:bg-gray-50"
@@ -187,7 +212,7 @@ export default function PerfilPage() {
                 </Button>
                 <Button
                   variant="ghost"
-                  onClick={() => setActiveTab("favoritos")}
+                  onClick={() => handleTabChange("favoritos")}
                   className={cn(
                     "w-full justify-start font-medium",
                     activeTab === "favoritos" ? "bg-blue-50 text-primary" : "text-gray-700 hover:text-primary hover:bg-gray-50"
@@ -249,8 +274,13 @@ export default function PerfilPage() {
                         </div>
                         <p className="text-xs text-gray-500">Para te avisar sobre leis da sua região</p>
                       </div>
-                      <Button className="w-full md:w-auto h-11 font-semibold shadow-md">
-                        <Save className="w-4 h-4 mr-2" /> Salvar Alterações
+                      <Button
+                        onClick={handleSave}
+                        disabled={isSaving}
+                        className="w-full md:w-auto h-11 font-semibold shadow-md"
+                      >
+                        <Save className="w-4 h-4 mr-2" />
+                        {isSaving ? "Salvando..." : "Salvar Alterações"}
                       </Button>
                     </div>
                   </div>

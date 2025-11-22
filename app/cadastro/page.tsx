@@ -96,7 +96,7 @@ export default function CadastroPage() {
                     type="tel"
                   />
                 </div>
-                <p className="text-sm text-gray-500">É por aqui que você vai receber os resumos</p>
+                <p className="text-sm text-gray-500">É por aqui que você vai receber os resumos. Sem spam, prometemos! 🤞</p>
               </div>
 
               {/* CEP */}

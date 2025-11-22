@@ -6,10 +6,18 @@ export default function PoliticaPrivacidadePage() {
       <main className="flex-1 container mx-auto px-4 py-12 max-w-4xl">
         <h1 className="text-4xl font-bold text-gray-900 mb-8">Política de Privacidade</h1>
 
+        <div className="bg-blue-50 border-l-4 border-blue-500 p-6 mb-8 rounded-r-lg">
+          <h2 className="text-lg font-bold text-blue-900 mb-2">Resumo Simples (sem juridiquês):</h2>
+          <p className="text-blue-800">
+            Seus dados são seus. Nós só usamos seu nome e telefone para enviar os resumos que você pediu.
+            Nunca vendemos suas informações e você pode deletar tudo quando quiser.
+          </p>
+        </div>
+
         <div className="prose prose-lg prose-blue max-w-none text-gray-600">
           <p className="lead text-xl text-gray-700 mb-8">
-            Sua privacidade é nossa prioridade. Esta política descreve como o SimplificaGov coleta, usa e protege suas
-            informações, em conformidade com a Lei Geral de Proteção de Dados (LGPD).
+            Sua privacidade é nossa prioridade. Abaixo, detalhamos legalmente como protegemos você,
+            em conformidade com a Lei Geral de Proteção de Dados (LGPD).
           </p>
 
           <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">1. Coleta de Dados</h2>

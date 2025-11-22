@@ -23,9 +23,9 @@ export default function LandingPage() {
                     IA a favor da democracia
                   </div>
                   <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-gray-900 leading-tight">
-                    Entender o governo <br />
+                    Descomplique a política <br />
                     <span className="text-primary relative inline-block">
-                      ficou simples.
+                      hoje mesmo.
                       <svg
                         className="absolute w-full h-3 -bottom-1 left-0 text-secondary -z-10"
                         viewBox="0 0 100 10"
@@ -36,8 +36,7 @@ export default function LandingPage() {
                     </span>
                   </h1>
                   <p className="text-xl text-gray-600 max-w-[600px] leading-relaxed">
-                    Receba explicações em linguagem simples e em áudio sobre leis, votações e decisões que afetam sua
-                    vida - direto no WhatsApp.
+                    Receba explicações em áudio e texto simples sobre as leis que mudam sua vida. Sem "juridiquês", direto no seu WhatsApp.
                   </p>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-4">
@@ -83,20 +82,20 @@ export default function LandingPage() {
             <div className="grid md:grid-cols-3 gap-8">
               <CardStep
                 icon={<MessageSquareText className="w-8 h-8 text-primary" />}
-                title="1. Mande sua dúvida"
-                description="Envie um áudio ou texto perguntando sobre um projeto de lei, benefício ou votação."
+                title="1. Você pergunta"
+                description="Tem dúvida sobre algum benefício ou lei? Mande um áudio ou texto pra gente."
                 color="bg-blue-50"
               />
               <CardStep
                 icon={<Mic className="w-8 h-8 text-secondary-foreground" />}
-                title="2. A IA traduz tudo"
-                description="Nossa inteligência artificial lê os documentos oficiais e traduz para linguagem simples."
+                title="2. O Simplinho traduz"
+                description="Nossa inteligência artificial lê os documentos oficiais e explica tudo de forma fácil."
                 color="bg-yellow-50"
               />
               <CardStep
                 icon={<Smartphone className="w-8 h-8 text-green-600" />}
-                title="3. Receba no Zap"
-                description="Você recebe a explicação em texto ou áudio, resumida e direto no seu celular."
+                title="3. Você entende"
+                description="Receba a resposta resumida em áudio ou texto no seu WhatsApp em segundos."
                 color="bg-green-50"
               />
             </div>

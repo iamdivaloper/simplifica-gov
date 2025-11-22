@@ -1,42 +1,80 @@
+"use client"
+
+import { useState } from "react"
 import Link from "next/link"
-import { WhatsappFloat } from "@/components/whatsapp-float"
+import { Breadcrumb } from "@/components/breadcrumb"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import {
-  ArrowLeft,
   CheckCircle2,
   Clock,
   AlertCircle,
   Share2,
-  PlayCircle,
   FileText,
   ShieldCheck,
   ExternalLink,
+  Star,
+  Bell,
+  User,
+  ChevronDown,
+  ChevronUp,
+  Calendar,
+  MapPin,
 } from "lucide-react"
 
 export default function ProjectDetails() {
+  const [isFavorited, setIsFavorited] = useState(false)
+  const [isFollowing, setIsFollowing] = useState(false)
+  const [expandedSections, setExpandedSections] = useState({
+    fullText: false,
+    timeline: true,
+    impact: true,
+  })
+
+  const toggleSection = (section: keyof typeof expandedSections) => {
+    setExpandedSections(prev => ({ ...prev, [section]: !prev[section] }))
+  }
+
+  const handleShare = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: "PL 2630 - Regras para Redes Sociais",
+        text: "Confira este projeto de lei no SimplificaGov",
+        url: window.location.href,
+      })
+    } else {
+      navigator.clipboard.writeText(window.location.href)
+      alert("Link copiado!")
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 font-sans">
-
       <main className="pb-20">
         {/* Header / Title Area */}
         <div className="bg-white border-b">
-          <div className="container mx-auto px-4 py-8">
-            <Link
-              href="/projetos-de-lei"
-              className="inline-flex items-center text-sm text-gray-500 hover:text-primary mb-6"
-            >
-              <ArrowLeft className="h-4 w-4 mr-1" /> Voltar para lista
-            </Link>
+          <div className="container mx-auto px-4 py-6">
+            {/* Breadcrumb */}
+            <Breadcrumb
+              items={[
+                { label: "Projetos de Lei", href: "/projetos-de-lei" },
+                { label: "PL 2630/2020" },
+              ]}
+              className="mb-6"
+            />
 
             <div className="flex flex-wrap gap-2 mb-4">
-              <Badge variant="secondary" className="text-blue-700 bg-blue-50">
+              <Badge className="bg-blue-600 text-white border-0 font-semibold">
                 Tecnologia
               </Badge>
-              <Badge variant="outline" className="text-gray-600 border-gray-300">
+              <Badge variant="outline" className="text-gray-700 border-gray-400 font-medium">
                 PL 2630/2020
+              </Badge>
+              <Badge className="bg-orange-100 text-orange-800 border-0">
+                Em tramitação
               </Badge>
             </div>
 
@@ -44,166 +82,267 @@ export default function ProjectDetails() {
               Regras para Redes Sociais e Combate às Fake News
             </h1>
 
-            <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-8 text-sm text-gray-500">
-              <div className="flex items-center">
-                <Clock className="h-4 w-4 mr-2" />
+            <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-8 text-sm text-gray-600 mb-6">
+              <div className="flex items-center gap-2">
+                <Clock className="h-4 w-4" />
                 Atualizado há 2 dias
               </div>
-              <div className="flex items-center">
-                <ShieldCheck className="h-4 w-4 mr-2 text-green-600" />
-                Explicação verificada por IA
+              <div className="flex items-center gap-2">
+                <MapPin className="h-4 w-4" />
+                Câmara dos Deputados
               </div>
+              <div className="flex items-center gap-2">
+                <Calendar className="h-4 w-4" />
+                Apresentado em 03/05/2020
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex flex-wrap gap-3">
+              <Button
+                variant={isFavorited ? "default" : "outline"}
+                onClick={() => setIsFavorited(!isFavorited)}
+                className="font-semibold"
+              >
+                <Star className={`h-4 w-4 mr-2 ${isFavorited ? "fill-current" : ""}`} />
+                {isFavorited ? "Favoritado" : "Favoritar"}
+              </Button>
+              <Button
+                variant={isFollowing ? "default" : "outline"}
+                onClick={() => setIsFollowing(!isFollowing)}
+                className="font-semibold"
+              >
+                <Bell className="h-4 w-4 mr-2" />
+                {isFollowing ? "Seguindo" : "Seguir Atualizações"}
+              </Button>
+              <Button variant="outline" onClick={handleShare} className="font-semibold">
+                <Share2 className="h-4 w-4 mr-2" />
+                Compartilhar
+              </Button>
             </div>
           </div>
         </div>
 
-        <div className="container mx-auto px-4 py-8 grid lg:grid-cols-3 gap-8">
-          {/* Main Content */}
-          <div className="lg:col-span-2 space-y-8">
-            {/* Summary Box */}
-            <Card className="border-none shadow-md bg-white overflow-hidden">
-              <div className="bg-primary/5 p-6 border-b border-primary/10">
-                <h2 className="text-lg font-bold text-primary flex items-center gap-2">
-                  <FileText className="h-5 w-5" />
-                  Resumo Simples
-                </h2>
+        <div className="container mx-auto px-4 py-8 space-y-8">
+          {/* What Changes for You - Highlight */}
+          <Card className="border-2 border-blue-200 bg-gradient-to-br from-blue-50 to-white shadow-lg">
+            <CardContent className="p-6">
+              <div className="flex items-start gap-4">
+                <div className="bg-blue-600 rounded-full p-3 flex-shrink-0">
+                  <AlertCircle className="h-6 w-6 text-white" />
+                </div>
+                <div className="flex-1">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-3">
+                    O que muda para você?
+                  </h2>
+                  <ul className="space-y-3 text-gray-800">
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
+                      <span className="leading-relaxed">
+                        <strong>Mais transparência:</strong> Redes sociais terão que explicar por que removeram seu conteúdo
+                      </span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
+                      <span className="leading-relaxed">
+                        <strong>Direito de recurso:</strong> Você poderá contestar a remoção de posts
+                      </span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
+                      <span className="leading-relaxed">
+                        <strong>Combate a fake news:</strong> Plataformas terão que identificar e reduzir alcance de desinformação
+                      </span>
+                    </li>
+                  </ul>
+                </div>
               </div>
-              <CardContent className="p-6 space-y-4">
-                <p className="text-lg leading-relaxed text-gray-700">
-                  Este projeto quer criar regras claras para empresas como Facebook, Google e Twitter operarem no
-                  Brasil.
-                </p>
-                <p className="text-lg leading-relaxed text-gray-700">
-                  Isso significa que elas terão que ser mais transparentes sobre como funcionam seus algoritmos e pagar
-                  por conteúdo jornalístico.
-                </p>
-                <p className="text-lg leading-relaxed text-gray-700 font-medium">
-                  Na prática, busca diminuir a circulação de notícias falsas e crimes digitais.
-                </p>
+            </CardContent>
+          </Card>
 
-                <div className="pt-4">
-                  <Button className="w-full md:w-auto gap-2 bg-gray-900 hover:bg-gray-800">
-                    <PlayCircle className="h-5 w-5" /> Ouvir explicação (2min)
+          {/* Author Info */}
+          <Card>
+            <CardContent className="p-6">
+              <h3 className="text-lg font-bold text-gray-900 mb-4">Quem propôs esta lei?</h3>
+              <div className="flex items-center gap-4">
+                <Avatar className="h-16 w-16 border-2 border-gray-200">
+                  <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white text-xl font-bold">
+                    AS
+                  </AvatarFallback>
+                </Avatar>
+                <div className="flex-1">
+                  <h4 className="font-bold text-gray-900 text-lg">Alessandro Molon</h4>
+                  <p className="text-gray-600">Deputado Federal • PSB/RJ</p>
+                  <p className="text-sm text-gray-500 mt-1">42 projetos propostos • 8 aprovados</p>
+                </div>
+                <Link href="/parlamentares/alessandro-molon">
+                  <Button variant="outline" className="font-semibold">
+                    <User className="h-4 w-4 mr-2" />
+                    Ver Perfil
                   </Button>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Impact Box - CRUCIAL */}
-            <div className="bg-blue-600 rounded-xl p-1 shadow-lg text-white">
-              <div className="bg-white text-gray-900 rounded-lg p-6 md:p-8">
-                <h2 className="text-2xl font-bold mb-6 flex items-center gap-2 text-blue-700">
-                  <AlertCircle className="h-6 w-6" />
-                  Como isso afeta você?
-                </h2>
-
-                <ul className="space-y-4">
-                  <li className="flex items-start gap-3">
-                    <div className="mt-1 h-6 w-6 rounded-full bg-green-100 flex items-center justify-center shrink-0">
-                      <CheckCircle2 className="h-4 w-4 text-green-600" />
-                    </div>
-                    <span>
-                      <strong>Mais segurança online:</strong> Reduz a chance de você cair em golpes ou ler mentiras
-                      sobre saúde e eleições.
-                    </span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <div className="mt-1 h-6 w-6 rounded-full bg-green-100 flex items-center justify-center shrink-0">
-                      <CheckCircle2 className="h-4 w-4 text-green-600" />
-                    </div>
-                    <span>
-                      <strong>Crianças protegidas:</strong> Exige que as redes sociais tenham cuidados especiais com
-                      contas de menores de idade.
-                    </span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <div className="mt-1 h-6 w-6 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
-                      <AlertCircle className="h-4 w-4 text-blue-600" />
-                    </div>
-                    <span>
-                      <strong>Conteúdo pago:</strong> Alguns serviços de notícias podem passar a ser remunerados pelas
-                      plataformas.
-                    </span>
-                  </li>
-                </ul>
+                </Link>
               </div>
-            </div>
+            </CardContent>
+          </Card>
 
-            {/* Social Impact */}
-            <div className="bg-white rounded-xl p-6 shadow-sm border">
-              <h3 className="font-bold text-lg mb-4">Quem é mais impactado?</h3>
-              <div className="flex flex-wrap gap-3">
-                {["Jovens e Crianças", "Usuários de Redes Sociais", "Jornalistas", "Pequenos Negócios Digitais"].map(
-                  (item) => (
-                    <Badge key={item} variant="secondary" className="px-3 py-1 text-sm">
-                      {item}
-                    </Badge>
-                  ),
+          {/* Timeline */}
+          <Card>
+            <CardContent className="p-6">
+              <button
+                onClick={() => toggleSection("timeline")}
+                className="w-full flex items-center justify-between mb-4 hover:text-primary transition-colors"
+              >
+                <h3 className="text-lg font-bold text-gray-900">Linha do Tempo da Tramitação</h3>
+                {expandedSections.timeline ? (
+                  <ChevronUp className="h-5 w-5" />
+                ) : (
+                  <ChevronDown className="h-5 w-5" />
                 )}
-              </div>
-            </div>
-          </div>
+              </button>
 
-          {/* Sidebar */}
-          <div className="space-y-6">
-            {/* Status Card */}
-            <Card>
-              <CardContent className="p-6">
-                <h3 className="font-bold text-gray-900 mb-4">Situação Atual</h3>
-                <div className="relative pl-4 border-l-2 border-gray-200 space-y-6">
-                  <div className="relative">
-                    <div className="absolute -left-[21px] top-1 h-3 w-3 rounded-full bg-green-500 ring-4 ring-white"></div>
-                    <p className="text-sm font-bold text-green-600">Aprovado no Senado</p>
-                    <p className="text-xs text-gray-500">30 Jun 2020</p>
-                  </div>
-                  <div className="relative">
-                    <div className="absolute -left-[21px] top-1 h-3 w-3 rounded-full bg-blue-500 ring-4 ring-white"></div>
-                    <p className="text-sm font-bold text-blue-600">Em debate na Câmara</p>
-                    <p className="text-xs text-gray-500">Atual</p>
-                  </div>
-                  <div className="relative opacity-50">
-                    <div className="absolute -left-[21px] top-1 h-3 w-3 rounded-full bg-gray-300 ring-4 ring-white"></div>
-                    <p className="text-sm font-bold text-gray-600">Sanção Presidencial</p>
-                  </div>
-                </div>
-
-                <Separator className="my-6" />
-
-                <div className="mb-4">
-                  <p className="text-xs text-gray-500 uppercase font-bold mb-1">Autor</p>
-                  <div className="flex items-center gap-2">
-                    <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center font-bold text-gray-600">
-                      AV
+              {expandedSections.timeline && (
+                <div className="space-y-4">
+                  {[
+                    {
+                      date: "15/11/2024",
+                      status: "Em análise",
+                      description: "Aguardando votação no Plenário",
+                      current: true,
+                    },
+                    {
+                      date: "20/08/2024",
+                      status: "Aprovado",
+                      description: "Aprovado na Comissão de Constituição e Justiça",
+                      current: false,
+                    },
+                    {
+                      date: "10/03/2024",
+                      status: "Em análise",
+                      description: "Enviado para Comissão de Ciência e Tecnologia",
+                      current: false,
+                    },
+                    {
+                      date: "03/05/2020",
+                      status: "Apresentado",
+                      description: "Projeto apresentado na Câmara dos Deputados",
+                      current: false,
+                    },
+                  ].map((item, index) => (
+                    <div key={index} className="flex gap-4">
+                      <div className="flex flex-col items-center">
+                        <div
+                          className={`w-3 h-3 rounded-full ${item.current ? "bg-blue-600 ring-4 ring-blue-200" : "bg-gray-300"
+                            }`}
+                        />
+                        {index < 3 && <div className="w-0.5 h-12 bg-gray-200" />}
+                      </div>
+                      <div className="flex-1 pb-4">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-sm font-semibold text-gray-900">{item.date}</span>
+                          <Badge
+                            className={
+                              item.current
+                                ? "bg-blue-600 text-white"
+                                : item.status === "Aprovado"
+                                  ? "bg-green-100 text-green-800"
+                                  : "bg-gray-100 text-gray-700"
+                            }
+                          >
+                            {item.status}
+                          </Badge>
+                        </div>
+                        <p className="text-sm text-gray-700">{item.description}</p>
+                      </div>
                     </div>
-                    <p className="font-medium">Sen. Alessandro Vieira</p>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Summary */}
+          <Card>
+            <CardContent className="p-6">
+              <h3 className="text-lg font-bold text-gray-900 mb-4">Resumo do Projeto</h3>
+              <p className="text-gray-700 leading-relaxed mb-4">
+                O PL 2630/2020, conhecido como "Lei das Fake News", estabelece regras para o funcionamento de redes
+                sociais e plataformas de mensagens no Brasil. O objetivo principal é combater a desinformação e
+                garantir mais transparência nas decisões de moderação de conteúdo.
+              </p>
+              <p className="text-gray-700 leading-relaxed">
+                Entre os pontos principais, o projeto exige que as plataformas expliquem suas decisões de remoção de
+                conteúdo, permitam recursos dos usuários, e implementem medidas para reduzir o alcance de informações
+                falsas verificadas.
+              </p>
+            </CardContent>
+          </Card>
+
+          {/* Full Text - Collapsible */}
+          <Card>
+            <CardContent className="p-6">
+              <button
+                onClick={() => toggleSection("fullText")}
+                className="w-full flex items-center justify-between mb-4 hover:text-primary transition-colors"
+              >
+                <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                  <FileText className="h-5 w-5" />
+                  Texto Completo do Projeto
+                </h3>
+                {expandedSections.fullText ? (
+                  <ChevronUp className="h-5 w-5" />
+                ) : (
+                  <ChevronDown className="h-5 w-5" />
+                )}
+              </button>
+
+              {expandedSections.fullText && (
+                <div className="prose max-w-none">
+                  <p className="text-gray-700 leading-relaxed mb-4">
+                    <strong>Art. 1º</strong> Esta Lei estabelece normas, diretrizes e mecanismos de transparência para
+                    provedores de redes sociais e de serviços de mensageria privada...
+                  </p>
+                  <p className="text-sm text-gray-600 italic">
+                    [Texto legal completo seria exibido aqui]
+                  </p>
+                  <div className="mt-6">
+                    <Button variant="outline" className="gap-2">
+                      <ExternalLink className="h-4 w-4" />
+                      Ver texto oficial no site da Câmara
+                    </Button>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+              )}
+            </CardContent>
+          </Card>
 
-            {/* Share */}
-            <Button variant="outline" className="w-full h-12 gap-2 font-bold border-2 bg-transparent">
-              <Share2 className="h-4 w-4" /> Compartilhar no WhatsApp
-            </Button>
-
-            {/* Sources */}
-            <div className="text-xs text-gray-500 space-y-2">
-              <p className="font-bold uppercase">Fontes Oficiais</p>
-              <Link href="#" className="flex items-center hover:text-primary hover:underline">
-                <ExternalLink className="h-3 w-3 mr-1" /> Câmara dos Deputados
-              </Link>
-              <Link href="#" className="flex items-center hover:text-primary hover:underline">
-                <ExternalLink className="h-3 w-3 mr-1" /> Senado Federal
-              </Link>
-              <Link href="#" className="flex items-center hover:text-primary hover:underline">
-                <ExternalLink className="h-3 w-3 mr-1" /> Querido Diário
-              </Link>
-            </div>
-          </div>
+          {/* Related Projects */}
+          <Card>
+            <CardContent className="p-6">
+              <h3 className="text-lg font-bold text-gray-900 mb-4">Projetos Relacionados</h3>
+              <div className="space-y-3">
+                {[
+                  { title: "PL 2768/2022 - Regulamentação de IA", tag: "Tecnologia" },
+                  { title: "PL 1234/2023 - Proteção de Dados Pessoais", tag: "Privacidade" },
+                ].map((project, index) => (
+                  <Link
+                    key={index}
+                    href="#"
+                    className="block p-4 border border-gray-200 rounded-lg hover:border-primary hover:shadow-md transition-all"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <Badge className="bg-blue-100 text-blue-800 border-0 mb-2">{project.tag}</Badge>
+                        <p className="font-semibold text-gray-900">{project.title}</p>
+                      </div>
+                      <ExternalLink className="h-5 w-5 text-gray-400" />
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </main>
-
-      <WhatsappFloat />
     </div>
   )
 }

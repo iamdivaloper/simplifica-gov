@@ -4,7 +4,7 @@ import { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { User, Menu, Home, FileText, Newspaper, Bell, Star, Settings, LogOut, ChevronDown } from "lucide-react"
+import { User, Menu, Home, FileText, Newspaper, Bell, Star, Settings, LogOut, ChevronDown, Users } from "lucide-react"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import {
   DropdownMenu,
@@ -25,6 +25,7 @@ export function SiteHeader() {
   const navItems = [
     { href: "/", label: "Início", icon: Home },
     { href: "/projetos-de-lei", label: "Explorar Leis", icon: FileText },
+    { href: "/parlamentares", label: "Parlamentares", icon: Users },
     { href: "/resumo-diario", label: "Resumo Diário", icon: Newspaper },
   ]
 

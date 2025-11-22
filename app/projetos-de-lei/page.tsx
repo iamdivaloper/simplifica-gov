@@ -27,7 +27,7 @@ export default function LawProjectsHub() {
 
             <div className="max-w-3xl mx-auto text-center space-y-6">
               <h1 className="text-3xl md:text-4xl font-bold text-gray-900">O que está acontecendo no Brasil?</h1>
-              <p className="text-lg text-gray-600">Busque por temas, palavras simples ou número do PL...</p>
+              <p className="text-lg text-gray-600">Digite um tema, uma palavra ou o número da lei. O Simplinho te ajuda a achar.</p>
 
               {/* Search Bar */}
               <div className="relative max-w-2xl mx-auto">
@@ -69,19 +69,23 @@ export default function LawProjectsHub() {
         </section>
 
         <div className="container mx-auto px-4 py-12 space-y-16">
-          {/* Top 10 Section */}
+          {/* Top 3 Section */}
           <section>
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-2">
-                <Flame className="h-6 w-6 text-orange-500 fill-orange-500" />
-                <h2 className="text-2xl font-bold text-gray-900">Mais vistos da semana</h2>
+            <div className="flex items-center justify-between mb-8">
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <Flame className="h-7 w-7 text-orange-500 fill-orange-500" />
+                  <h2 className="text-3xl font-bold text-gray-900">Top 3 da Semana</h2>
+                </div>
+                <p className="text-gray-600">Os projetos que mais chamaram atenção dos brasileiros</p>
               </div>
-              <Button variant="link" className="text-primary">
-                Ver todos
+              <Button variant="link" className="text-primary font-semibold">
+                Ver todos →
               </Button>
             </div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* Podium Layout */}
+            <div className="grid md:grid-cols-3 gap-6 mb-8">
               {[
                 {
                   id: "pl-2630",
@@ -89,8 +93,12 @@ export default function LawProjectsHub() {
                   tag: "Tecnologia",
                   summary:
                     "Define regras para moderação de conteúdo e transparência em redes sociais. Busca combater notícias falsas.",
-                  views: "Alta procura",
+                  views: "12.5k visualizações",
+                  rank: 1,
+                  medal: "🥇",
                   color: "bg-blue-100 text-blue-700",
+                  borderColor: "border-yellow-400",
+                  bgGradient: "from-yellow-50 to-white",
                 },
                 {
                   id: "pl-creches",
@@ -98,8 +106,12 @@ export default function LawProjectsHub() {
                   tag: "Educação",
                   summary:
                     "Propõe obrigar municípios a zerar filas de creches em até 2 anos, com repasse federal extra.",
-                  views: "Tendência",
+                  views: "9.8k visualizações",
+                  rank: 2,
+                  medal: "🥈",
                   color: "bg-green-100 text-green-700",
+                  borderColor: "border-gray-300",
+                  bgGradient: "from-gray-50 to-white",
                 },
                 {
                   id: "pl-transporte",
@@ -107,28 +119,66 @@ export default function LawProjectsHub() {
                   tag: "Transporte",
                   summary:
                     "Cria um fundo nacional para subsidiar o transporte público gratuito em cidades com mais de 200 mil habitantes.",
-                  views: "Muito acessado",
+                  views: "7.2k visualizações",
+                  rank: 3,
+                  medal: "🥉",
                   color: "bg-yellow-100 text-yellow-800",
+                  borderColor: "border-orange-300",
+                  bgGradient: "from-orange-50 to-white",
                 },
-              ].map((project) => (
+              ].map((project, index) => (
                 <Link href={`/projetos-de-lei/${project.id}`} key={project.id}>
-                  <Card className="h-full hover:shadow-lg transition-shadow border-gray-200 group cursor-pointer">
+                  <Card
+                    className={`h-full hover:shadow-2xl transition-all border-2 ${project.borderColor} group cursor-pointer relative overflow-hidden bg-gradient-to-b ${project.bgGradient} ${project.rank === 1 ? "md:scale-105 shadow-xl" : ""
+                      }`}
+                  >
+                    {/* Rank Badge */}
+                    <div className="absolute top-4 right-4 z-10">
+                      <div
+                        className={`text-4xl transform transition-transform group-hover:scale-125 ${project.rank === 1 ? "animate-pulse" : ""
+                          }`}
+                      >
+                        {project.medal}
+                      </div>
+                    </div>
+
                     <CardContent className="p-6 flex flex-col h-full">
-                      <div className="flex justify-between items-start mb-4">
-                        <Badge variant="outline" className={`${project.color} border-none font-bold`}>
+                      <div className="flex items-start mb-4">
+                        <Badge variant="outline" className={`${project.color} border-none font-bold text-sm`}>
                           {project.tag}
                         </Badge>
-                        <div className="flex items-center text-xs font-medium text-orange-600 bg-orange-50 px-2 py-1 rounded-full">
-                          <Flame className="h-3 w-3 mr-1" /> {project.views}
-                        </div>
                       </div>
-                      <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-primary transition-colors">
-                        {project.title}
-                      </h3>
-                      <p className="text-gray-600 mb-6 line-clamp-3 flex-grow">{project.summary}</p>
-                      <Button className="w-full group-hover:bg-primary/90">
-                        Ver detalhes <ArrowRight className="ml-2 h-4 w-4" />
-                      </Button>
+
+                      <div className="mb-3">
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-2xl font-black text-gray-900">#{project.rank}</span>
+                          <div className="h-px flex-1 bg-gradient-to-r from-gray-300 to-transparent"></div>
+                        </div>
+                        <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-primary transition-colors leading-tight">
+                          {project.title}
+                        </h3>
+                      </div>
+
+                      <p className="text-gray-700 mb-4 line-clamp-3 flex-grow text-sm leading-relaxed">
+                        {project.summary}
+                      </p>
+
+                      <div className="space-y-3 mt-auto">
+                        <div className="flex items-center justify-between text-sm">
+                          <div className="flex items-center gap-1 text-orange-600 font-semibold">
+                            <Flame className="h-4 w-4 fill-orange-500" />
+                            <span>{project.views}</span>
+                          </div>
+                          {project.rank === 1 && (
+                            <Badge className="bg-yellow-500 text-white border-0 text-xs font-bold">
+                              🔥 MAIS VISTO
+                            </Badge>
+                          )}
+                        </div>
+                        <Button className="w-full group-hover:bg-primary/90 font-semibold shadow-md">
+                          Ver detalhes <ArrowRight className="ml-2 h-4 w-4" />
+                        </Button>
+                      </div>
                     </CardContent>
                   </Card>
                 </Link>

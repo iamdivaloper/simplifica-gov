@@ -45,19 +45,25 @@
 
 /* Updated color palette for SimplificaGov: Blue #1D4ED8, Yellow #FACC15, Neutrals #F3F4F6 */
 :root {
-  --background: #f3f4f6; /* Neutral Light */
-  --foreground: #111827; /* Dark Gray for text */
+  --background: #f3f4f6;
+  /* Neutral Light */
+  --foreground: #111827;
+  /* Dark Gray for text */
   --card: #ffffff;
   --card-foreground: #111827;
   --popover: #ffffff;
   --popover-foreground: #111827;
-  --primary: #1d4ed8; /* Brand Blue */
+  --primary: #1d4ed8;
+  /* Brand Blue */
   --primary-foreground: #ffffff;
-  --secondary: #facc15; /* Brand Yellow */
-  --secondary-foreground: #1d4ed8; /* Blue text on Yellow for contrast */
+  --secondary: #facc15;
+  /* Brand Yellow */
+  --secondary-foreground: #1d4ed8;
+  /* Blue text on Yellow for contrast */
   --muted: #e5e7eb;
   --muted-foreground: #6b7280;
-  --accent: #eff6ff; /* Light Blue tint */
+  --accent: #eff6ff;
+  /* Light Blue tint */
   --accent-foreground: #1d4ed8;
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
@@ -75,7 +81,8 @@
   --card-foreground: #f3f4f6;
   --popover: #1f2937;
   --popover-foreground: #f3f4f6;
-  --primary: #3b82f6; /* Lighter blue for dark mode */
+  --primary: #3b82f6;
+  /* Lighter blue for dark mode */
   --primary-foreground: #ffffff;
   --secondary: #facc15;
   --secondary-foreground: #111827;
@@ -88,12 +95,55 @@
   --border: #374151;
   --input: #374151;
   --ring: #3b82f6;
+  --chart-5: 27 87% 67%;
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Focus-visible styles for accessibility */
+*:focus-visible {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Remove default focus for mouse users */
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Improve button and link focus */
+button:focus-visible,
+a:focus-visible {
+  outline: 3px solid hsl(var(--primary));
+  outline-offset: 3px;
+}
+
+/* Skip link for accessibility */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: hsl(var(--primary));
+  color: white;
+  padding: 8px 16px;
+  text-decoration: none;
+  z-index: 100;
+  border-radius: 0 0 4px 0;
+}
+
+.skip-link:focus {
+  top: 0;
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }

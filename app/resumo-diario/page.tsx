@@ -17,7 +17,7 @@ export default function DailySummary() {
           </div>
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900">Seu Resumo Diário</h1>
           <p className="text-lg text-gray-600 max-w-2xl">
-            Olá, Cidadão! Aqui estão as principais atualizações sobre os projetos que afetam sua vida hoje.
+            Olá! 👋 Aqui estão as principais atualizações sobre os projetos que afetam sua vida hoje.
           </p>
         </div>
 

@@ -11,10 +11,9 @@ export default function SobrePage() {
         {/* Hero Section */}
         <section className="bg-primary text-white py-20">
           <div className="container mx-auto px-4 text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">Sobre o SimplificaGov</h1>
+            <h1 className="text-4xl md:text-5xl font-bold mb-6">Quem somos e por que existimos</h1>
             <p className="text-xl md:text-2xl text-blue-100 max-w-3xl mx-auto leading-relaxed">
-              Nossa missão é democratizar o acesso à informação pública, traduzindo o "juridiquês" para a língua que
-              todos falam.
+              Nossa missão é simples: traduzir o "juridiquês" para a língua que todos nós falamos. Porque informação é poder.
             </p>
           </div>
         </section>
@@ -24,18 +23,18 @@ export default function SobrePage() {
           <div className="grid md:grid-cols-3 gap-8">
             <Card
               icon={<Target className="w-10 h-10 text-primary" />}
-              title="Missão"
-              description="Tornar a política e as leis compreensíveis para qualquer cidadão, independentemente de seu grau de instrução."
+              title="Nossa Missão"
+              description="Tornar a política compreensível para qualquer pessoa, sem palavras difíceis."
             />
             <Card
               icon={<Users className="w-10 h-10 text-secondary-foreground" />}
-              title="Para Quem"
-              description="Para trabalhadores, estudantes e cidadãos que não têm tempo a perder decifrando textos complexos."
+              title="Para Quem É"
+              description="Para você que trabalha, estuda e não tem tempo a perder decifrando leis complicadas."
             />
             <Card
               icon={<Heart className="w-10 h-10 text-red-500" />}
-              title="Valores"
-              description="Transparência total, neutralidade política e acessibilidade real para todos os brasileiros."
+              title="Nossos Valores"
+              description="Transparência total, neutralidade e respeito pelo seu tempo e inteligência."
             />
           </div>
         </section>
