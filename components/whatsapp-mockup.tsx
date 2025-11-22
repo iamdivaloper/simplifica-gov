@@ -11,7 +11,7 @@ export function WhatsappMockup({ className }: { className?: string }) {
       )}
     >
       {/* Status Bar Mock */}
-      <div className="bg-[#008069] h-8 w-full flex items-center justify-between px-6 pt-2">
+      <div className="bg-primary h-8 w-full flex items-center justify-between px-6 pt-2">
         <div className="text-[10px] text-white font-medium">12:30</div>
         <div className="flex gap-1">
           <div className="w-3 h-3 bg-white rounded-full opacity-20"></div>
@@ -20,14 +20,14 @@ export function WhatsappMockup({ className }: { className?: string }) {
       </div>
 
       {/* Header */}
-      <div className="bg-[#008069] px-4 py-2 flex items-center gap-2 text-white">
+      <div className="bg-primary px-4 py-2 flex items-center gap-2 text-white">
         <ArrowLeft className="w-5 h-5" />
-        <Avatar className="h-9 w-9 border border-white/20">
-          <AvatarImage src="/placeholder.svg?height=40&width=40" />
+        <Avatar className="h-9 w-9 border border-white/20 bg-white">
+          <AvatarImage src="/logo-icon.png" className="object-cover p-0.5" />
           <AvatarFallback className="bg-primary text-white font-bold">SG</AvatarFallback>
         </Avatar>
         <div className="flex-1">
-          <div className="font-semibold text-sm">SimplificaGov 🇧🇷</div>
+          <div className="font-semibold text-sm">Simplinho 🇧🇷</div>
           <div className="text-[10px] opacity-90">Conta Oficial</div>
         </div>
         <div className="flex gap-3">

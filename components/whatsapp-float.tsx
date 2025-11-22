@@ -9,7 +9,7 @@ export function WhatsappFloat() {
         className="h-14 w-14 rounded-full bg-[#25D366] hover:bg-[#128C7E] text-white shadow-xl p-0 flex items-center justify-center transition-transform hover:scale-110"
       >
         <MessageCircle className="h-8 w-8" fill="currentColor" />
-        <span className="sr-only">Fale no WhatsApp</span>
+        <span className="sr-only">Fale com o Simplinho</span>
       </Button>
     </div>
   )

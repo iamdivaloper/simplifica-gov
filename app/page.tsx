@@ -1,5 +1,6 @@
 import type React from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { WhatsappMockup } from "@/components/whatsapp-mockup"
 import { Mic, MessageSquareText, FileText, Bell, ShieldCheck, Globe, Smartphone } from "lucide-react"
@@ -179,14 +180,18 @@ export default function LandingPage() {
         </section>
       </main>
 
-      <footer className="bg-gray-900 text-gray-400 py-12">
+      <footer className="bg-[#172554] text-gray-400 py-12">
         <div className="container mx-auto px-4 text-center md:text-left">
           <div className="grid md:grid-cols-4 gap-8">
             <div className="col-span-1 md:col-span-2">
               <div className="flex items-center gap-2 justify-center md:justify-start mb-4">
-                <div className="h-8 w-8 bg-white rounded-lg flex items-center justify-center text-gray-900 font-bold text-xl">
-                  S
-                </div>
+                <Image
+                  src="/logo-icon.png"
+                  alt="SimplificaGov Logo"
+                  width={64}
+                  height={64}
+                  className="h-16 w-16 rounded-lg"
+                />
                 <span className="text-xl font-bold text-white">SimplificaGov</span>
               </div>
               <p className="text-sm max-w-xs mx-auto md:mx-0">

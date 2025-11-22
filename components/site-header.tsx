@@ -7,6 +7,8 @@ import { User, Menu } from "lucide-react"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { cn } from "@/lib/utils"
 
+import Image from "next/image"
+
 export function SiteHeader() {
   const pathname = usePathname()
 
@@ -22,10 +24,14 @@ export function SiteHeader() {
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <div className="flex items-center gap-8">
           <Link href="/" className="flex items-center gap-2 group">
-            <div className="h-8 w-8 bg-primary rounded-lg flex items-center justify-center text-white font-bold text-xl transition-transform group-hover:scale-105">
-              S
-            </div>
-            <span className="text-xl font-bold text-primary tracking-tight">SimplificaGov</span>
+            <Image
+              src="/logo-full.png"
+              alt="SimplificaGov Logo"
+              width={240}
+              height={56}
+              className="transition-transform group-hover:scale-105"
+              priority
+            />
           </Link>
 
           <nav className="hidden md:flex gap-1">
