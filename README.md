@@ -4,72 +4,85 @@
   <p>
     <b>Democratizando o acesso à informação governamental através da simplificação com IA.</b>
   </p>
-  <p>
-    O SimplificaGov traduz documentos legislativos complexos e decisões governamentais para o português claro, entregando explicações acessíveis diretamente aos cidadãos via WhatsApp.
-  </p>
 </div>
 
-<br />
+---
 
-> [!NOTE]
-> Este projeto é construído com **Next.js 16** e **Tailwind CSS**, focando em acessibilidade (VLibras), performance e uma estética "GovTech" limpa usando **Public Sans**.
+## 📖 Descrição do Projeto
 
-## ✨ Funcionalidades
+O **SimplificaGov** é uma plataforma inovadora que utiliza Inteligência Artificial para traduzir a complexidade dos documentos legislativos e governamentais para uma linguagem simples e acessível a todos os cidadãos.
 
-- **🏛️ Simplificação Legislativa**: Tradução impulsionada por IA de Projetos de Lei para linguagem cotidiana.
-- **📱 Integração com WhatsApp**: Projetado para entregar resumos em áudio e texto diretamente onde os cidadãos estão.
-- **♿ Acessibilidade em Primeiro Lugar**: Widget **VLibras** integrado e modos de alto contraste para acesso inclusivo.
-- **⚡ Performance**: Otimizado com **Vercel Speed Insights** e **Analytics**.
-- **🎨 UI Moderna**: Construído com primitivos **Radix UI** e **Tailwind CSS**, apresentando um design responsivo e institucional.
+Nossa missão é combater a desinformação e aumentar o engajamento cívico, permitindo que qualquer pessoa entenda o que está sendo votado e decidido em Brasília, sem precisar decifrar o "juridiquês".
 
-## 🛠️ Tecnologias
+### Principais Funcionalidades:
+- **Tradução de Leis**: Resumos automáticos e simplificados de Projetos de Lei.
+- **Resumo Diário**: Atualizações personalizadas via WhatsApp em texto e áudio.
+- **Simplinho**: Um assistente virtual carismático que tira dúvidas sobre política.
+- **Monitoramento**: Acompanhamento de parlamentares e temas de interesse.
+- **Acessibilidade**: Foco total em UX inclusiva, contraste e navegação simplificada.
 
-- **Framework**: [Next.js 16](https://nextjs.org/) (App Router)
-- **Estilização**: [Tailwind CSS](https://tailwindcss.com/)
-- **Componentes de UI**: [Radix UI](https://www.radix-ui.com/) & [Lucide React](https://lucide.dev/)
-- **Tipografia**: [Public Sans](https://fontsource.org/fonts/public-sans) (Google Fonts)
-- **Acessibilidade**: [VLibras](https://www.gov.br/governodigital/pt-br/vlibras)
-- **Deploy**: [Vercel](https://vercel.com/)
+---
 
-## 🚀 Começando
+## � Membros da Equipe
+
+| Nome | Função | GitHub |
+|------|--------|--------|
+| **Maysa Santos** | Tech Lead & Fullstack Dev | [@Maysamkt](https://github.com/Maysamkt) |
+| **Rafaela Rocha Feijó** | Product Manager | [@Rafaelafeijo](https://github.com/Rafaelafeijo) |
+| **Maikon Icaro dos Santos** | AI Engineer | [@Maikon-sant](https://github.com/Maikon-sant) |
+| **Jessica Lopes** | Frontend Developer | [@iamdivaloper](https://github.com/iamdivaloper) |
+
+---
+
+## ⚙️ Instruções de Configuração
+
+Siga os passos abaixo para rodar o projeto localmente:
 
 ### Pré-requisitos
+- Node.js 18+ instalado
+- npm ou yarn ou pnpm
 
-- **Node.js** 18+ instalado
-- **npm** instalado
+### Passo a Passo
 
-### Instalação
-
-1. Clone o repositório:
+1. **Clone o repositório**
    ```bash
    git clone https://github.com/iamdivaloper/simplifica-gov.git
    cd simplifica-gov
    ```
 
-2. Instale as dependências:
+2. **Instale as dependências**
    ```bash
    npm install
+   # ou
+   yarn install
    ```
 
-3. Rode o servidor de desenvolvimento:
+3. **Configure as variáveis de ambiente**
+   Crie um arquivo `.env.local` na raiz do projeto (opcional para rodar o frontend básico):
+   ```env
+   NEXT_PUBLIC_API_URL=http://localhost:3000/api
+   ```
+
+4. **Rode o servidor de desenvolvimento**
    ```bash
    npm run dev
    ```
 
-4. Abra [http://localhost:3000](http://localhost:3000) no seu navegador.
+5. **Acesse a aplicação**
+   Abra seu navegador em [http://localhost:3000](http://localhost:3000)
 
-## 📂 Estrutura do Projeto
+---
 
-```
-simplifica-gov/
-├── app/                 # Páginas e layouts do Next.js App Router
-│   ├── layout.tsx       # Layout raiz com VLibras & Analytics
-│   ├── page.tsx         # Página inicial (Landing page)
-│   └── globals.css      # Estilos globais e tema Tailwind
-├── components/          # Componentes de UI reutilizáveis
-│   ├── ui/              # Primitivos Radix UI
-│   ├── site-header.tsx  # Navegação principal
-│   └── vlibras.tsx      # Widget de acessibilidade
-├── public/              # Ativos estáticos (imagens, ícones)
-└── package.json         # Dependências e scripts
-```
+## 🚀 Instruções de Uso
+
+1. **Explore a Home**: Entenda a proposta de valor e veja como o Simplinho funciona.
+2. **Consulte Projetos de Lei**: Navegue pela página `/projetos-de-lei` para ver o ranking dos projetos mais populares e leia seus resumos simplificados.
+3. **Conheça Parlamentares**: Acesse `/parlamentares` para buscar deputados e senadores, ver suas estatísticas e leis aprovadas.
+4. **Crie uma Conta**: Vá em `/cadastro` para simular a criação de um perfil e personalizar seus interesses.
+5. **Interaja com o Simplinho**: Clique no botão flutuante do WhatsApp para testar o chat interativo.
+
+---
+
+## 📄 Licença
+
+Este projeto é distribuído sob a licença **MIT**. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
