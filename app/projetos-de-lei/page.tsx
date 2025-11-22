@@ -86,7 +86,7 @@ export default function LawProjectsHub() {
               {[
                 {
                   id: "pl-2630",
-                  title: "PL 2630 — Regras para Redes Sociais",
+                  title: "PL 2630 - Regras para Redes Sociais",
                   tag: "Tecnologia",
                   summary:
                     "Define regras para moderação de conteúdo e transparência em redes sociais. Busca combater notícias falsas.",

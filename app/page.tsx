@@ -37,7 +37,7 @@ export default function LandingPage() {
                   </h1>
                   <p className="text-xl text-gray-600 max-w-[600px] leading-relaxed">
                     Receba explicações em linguagem simples e em áudio sobre leis, votações e decisões que afetam sua
-                    vida — direto no WhatsApp.
+                    vida - direto no WhatsApp.
                   </p>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-4">
