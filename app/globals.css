@@ -98,3 +98,8 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* VLibras Widget Customization */
+[vw] {
+  z-index: 100 !important;
+}
