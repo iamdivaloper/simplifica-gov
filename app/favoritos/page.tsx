@@ -1,5 +1,4 @@
 import Link from "next/link"
-import { SiteHeader } from "@/components/site-header"
 import { WhatsappFloat } from "@/components/whatsapp-float"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -9,7 +8,6 @@ import { Star, ArrowRight, Trash2 } from "lucide-react"
 export default function FavoritosPage() {
   return (
     <div className="min-h-screen bg-gray-50 font-sans">
-      <SiteHeader />
 
       <main className="pb-20">
         <section className="bg-white border-b py-12">

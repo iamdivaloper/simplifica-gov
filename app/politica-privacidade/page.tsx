@@ -1,9 +1,7 @@
-import { SiteHeader } from "@/components/site-header"
 
 export default function PoliticaPrivacidadePage() {
   return (
     <div className="min-h-screen flex flex-col bg-white">
-      <SiteHeader />
 
       <main className="flex-1 container mx-auto px-4 py-12 max-w-4xl">
         <h1 className="text-4xl font-bold text-gray-900 mb-8">Política de Privacidade</h1>

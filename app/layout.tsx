@@ -4,6 +4,7 @@ import { Analytics } from "@vercel/analytics/next"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { VLibras } from "@/components/vlibras"
 import { WhatsappFloat } from "@/components/whatsapp-float"
+import { SiteHeader } from "@/components/site-header"
 import "./globals.css"
 
 const publicSans = Public_Sans({
@@ -19,9 +20,10 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body className={`${publicSans.variable} font-sans antialiased`} suppressHydrationWarning>
+        <SiteHeader />
         {children}
-        <VLibras />
         <WhatsappFloat />
+        <VLibras />
         <Analytics />
         <SpeedInsights />
       </body>

@@ -1,5 +1,4 @@
 import type React from "react"
-import { SiteHeader } from "@/components/site-header"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { ArrowRight, CheckCircle2, Users, Target, Heart } from "lucide-react"
@@ -7,7 +6,6 @@ import { ArrowRight, CheckCircle2, Users, Target, Heart } from "lucide-react"
 export default function SobrePage() {
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-      <SiteHeader />
 
       <main className="flex-1">
         {/* Hero Section */}

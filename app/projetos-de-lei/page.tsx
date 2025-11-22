@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { SiteHeader } from "@/components/site-header"
+
 import { WhatsappFloat } from "@/components/whatsapp-float"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -10,7 +10,6 @@ import { Search, Mic, Star, ArrowRight, Flame, MapPin, Users, Building2 } from "
 export default function LawProjectsHub() {
   return (
     <div className="min-h-screen bg-gray-50 font-sans">
-      <SiteHeader />
 
       <main className="pb-20">
         {/* Hero / Search Section */}

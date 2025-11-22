@@ -1,5 +1,4 @@
 import Link from "next/link"
-import { SiteHeader } from "@/components/site-header"
 import { WhatsappFloat } from "@/components/whatsapp-float"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -20,7 +19,6 @@ import {
 export default function ProjectDetails() {
   return (
     <div className="min-h-screen bg-gray-50 font-sans">
-      <SiteHeader />
 
       <main className="pb-20">
         {/* Header / Title Area */}

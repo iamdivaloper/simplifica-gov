@@ -1,4 +1,3 @@
-import { SiteHeader } from "@/components/site-header"
 import { WhatsappFloat } from "@/components/whatsapp-float"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -8,7 +7,6 @@ import { Calendar, CheckCircle2, Clock, PlayCircle, Share2 } from "lucide-react"
 export default function DailySummary() {
   return (
     <div className="min-h-screen bg-gray-50 font-sans">
-      <SiteHeader />
 
       <main className="container mx-auto px-4 py-8 pb-20">
         {/* Header Section */}

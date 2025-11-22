@@ -4,13 +4,12 @@ import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { WhatsappMockup } from "@/components/whatsapp-mockup"
 import { Mic, MessageSquareText, FileText, Bell, ShieldCheck, Globe, Smartphone } from "lucide-react"
-import { SiteHeader } from "@/components/site-header"
+
 
 export default function LandingPage() {
   return (
     <div className="min-h-screen flex flex-col font-sans">
-      {/* Use the new SiteHeader */}
-      <SiteHeader />
+
 
       <main className="flex-1">
         {/* Hero Section */}
@@ -251,7 +250,7 @@ export default function LandingPage() {
           </div>
         </div>
       </footer>
-    </div>
+    </div >
   )
 }
 
