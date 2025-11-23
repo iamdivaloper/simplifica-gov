@@ -1,6 +1,7 @@
 import { auth } from "./auth";
-import { addFavoritoLocal, removeFavoritoLocal, getFavoritos as getLocalFavoritos, isFavoritoLocal, addPreferenciaLocal, removePreferenciaLocal, getPreferencias as getLocalPreferencias, addAlertaLocal, removeAlertaLocal, getAlertas as getLocalAlertas, markAlertaAsReadLocal } from "./storage";
+import { addFavoritoLocal, removeFavoritoLocal, getFavoritos as getLocalFavoritos, isFavoritoLocal, addPreferenciaLocal, removePreferenciaLocal, getPreferencias as getLocalPreferencias, addAlertaLocal, removeAlertaLocal, getAlertas as getLocalAlertas, markAlertaAsReadLocal, savePendingAction } from "./storage";
 import { fetchRecentProjects } from "./data-service";
+import { cache, TTL } from "./cache";
 
 export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.simplificagov.com";
 
@@ -126,6 +127,16 @@ export const api = {
         numero?: number;
         ano?: number;
     }) => {
+        // Create cache key from params
+        const cacheKey = `leis_${JSON.stringify(params || {})}`;
+
+        // Try cache first
+        const cached = await cache.get<Lei[]>("leis", cacheKey);
+        if (cached) {
+            console.log("[API] Cache hit for leis");
+            return cached;
+        }
+
         try {
             const searchParams = new URLSearchParams();
             if (params) {
@@ -133,12 +144,17 @@ export const api = {
                     if (value !== undefined) searchParams.append(key, String(value));
                 });
             }
-            return await fetchApi<Lei[]>(`/leis?${searchParams.toString()}`);
+            const data = await fetchApi<Lei[]>(`/leis?${searchParams.toString()}`);
+
+            // Cache the result
+            await cache.set("leis", cacheKey, data, TTL.LEIS);
+
+            return data;
         } catch (error) {
             console.warn("API falhou, tentando fontes secundárias:", error);
             try {
                 const normalizedData = await fetchRecentProjects();
-                return normalizedData.map(item => ({
+                const data = normalizedData.map(item => ({
                     id: item.id,
                     numero: 0,
                     ano: new Date(item.date).getFullYear(),
@@ -155,6 +171,11 @@ export const api = {
                         pontos_negativos: []
                     }
                 }));
+
+                // Cache fallback data
+                await cache.set("leis", cacheKey, data, TTL.LEIS);
+
+                return data;
             } catch (fallbackError) {
                 console.error("Todas as fontes falharam:", fallbackError);
                 return []; // Return empty array instead of mock data
@@ -163,23 +184,30 @@ export const api = {
     },
 
     getLeiById: async (id: string) => {
+        // Try cache first
+        const cached = await cache.get<Lei>("leis", `lei_${id}`);
+        if (cached) {
+            console.log(`[API] Cache hit for lei ${id}`);
+            return cached;
+        }
+
         try {
-            return await fetchApi<Lei>(`/leis/${id}`);
+            const data = await fetchApi<Lei>(`/leis/${id}`);
+
+            // Cache the result
+            await cache.set("leis", `lei_${id}`, data, TTL.LEIS);
+
+            return data;
         } catch (error) {
             console.warn("API falhou, tentando buscar via fontes secundárias:", error);
             try {
                 // Try to find by ID or similar in the resilient search
-                // Since we don't have a direct "get by id" in the resilient layer, we search for the ID
-                const normalizedData = await fetchRecentProjects(); // Or search by ID if possible
-                // In a real scenario, we would search for the specific ID. 
-                // For now, let's assume if we can't find it, we return error, 
-                // OR we try to search for it.
-                // Let's try to search for the ID if it looks like a keyword
+                const normalizedData = await fetchRecentProjects();
                 const searchResults = await import("./data-service").then(m => m.fetchGovernmentData(id));
                 const found = searchResults.find(item => item.id === id || item.title.includes(id));
 
                 if (found) {
-                    return {
+                    const data = {
                         id: found.id,
                         numero: 0,
                         ano: new Date(found.date).getFullYear(),
@@ -196,6 +224,11 @@ export const api = {
                             pontos_negativos: []
                         }
                     };
+
+                    // Cache fallback data
+                    await cache.set("leis", `lei_${id}`, data, TTL.LEIS);
+
+                    return data;
                 }
                 throw new Error("Lei não encontrada nas fontes secundárias");
             } catch (fallbackError) {
@@ -205,18 +238,36 @@ export const api = {
     },
 
     translateLei: async (id: string) => {
+        // Try cache first (permanent cache for AI translations to save tokens)
+        const cached = await cache.get<{
+            resumo: string;
+            toolkit: {
+                frases_chave: string[];
+                roteiro_video: string;
+            };
+        }>("traducoes", `traducao_${id}`);
+
+        if (cached) {
+            console.log(`[API] Cache hit for traducao ${id} (saving AI tokens!)`);
+            return cached;
+        }
+
         try {
-            return await fetchApi<{
+            const data = await fetchApi<{
                 resumo: string;
                 toolkit: {
                     frases_chave: string[];
                     roteiro_video: string;
                 };
             }>(`/leis/${id}/traduzir`, { method: "POST" });
+
+            // Cache permanently (no TTL) to save AI tokens
+            await cache.set("traducoes", `traducao_${id}`, data, TTL.TRADUCOES);
+
+            return data;
         } catch (error) {
             console.warn("API falhou, usando dados mockados:", error);
             throw new Error("Tradução não disponível nas fontes secundárias");
-
         }
     },
 
@@ -266,6 +317,16 @@ export const api = {
         uf?: string;
         cargo?: "Deputado Federal" | "Senador";
     }) => {
+        // Create cache key from params
+        const cacheKey = `parlamentares_${JSON.stringify(params || {})}`;
+
+        // Try cache first
+        const cached = await cache.get<Parlamentar[]>("parlamentares", cacheKey);
+        if (cached) {
+            console.log("[API] Cache hit for parlamentares");
+            return cached;
+        }
+
         try {
             const searchParams = new URLSearchParams();
             if (params) {
@@ -273,14 +334,19 @@ export const api = {
                     if (value !== undefined) searchParams.append(key, String(value));
                 });
             }
-            return await fetchApi<Parlamentar[]>(`/parlamentares?${searchParams.toString()}`);
+            const data = await fetchApi<Parlamentar[]>(`/parlamentares?${searchParams.toString()}`);
+
+            // Cache the result
+            await cache.set("parlamentares", cacheKey, data, TTL.PARLAMENTARES);
+
+            return data;
         } catch (error) {
             console.warn("API falhou, tentando fontes secundárias:", error);
             try {
                 const { fetchParlamentares } = await import("./data-service");
                 const normalizedData = await fetchParlamentares();
 
-                return normalizedData.map((item, index) => ({
+                const data = normalizedData.map((item, index) => ({
                     id: item.id,
                     nome: item.title, // Assuming title is the name
                     partido: "Sem Partido", // AI might not parse this yet, default
@@ -293,6 +359,11 @@ export const api = {
                     projetos_aprovados: 0,
                     presenca_sessoes: 100
                 }));
+
+                // Cache fallback data
+                await cache.set("parlamentares", cacheKey, data, TTL.PARLAMENTARES);
+
+                return data;
             } catch (fallbackError) {
                 console.error("Todas as fontes falharam:", fallbackError);
                 return [];
@@ -301,8 +372,20 @@ export const api = {
     },
 
     getParlamentarById: async (id: string) => {
+        // Try cache first
+        const cached = await cache.get<Parlamentar>("parlamentares", `parlamentar_${id}`);
+        if (cached) {
+            console.log(`[API] Cache hit for parlamentar ${id}`);
+            return cached;
+        }
+
         try {
-            return await fetchApi<Parlamentar>(`/parlamentares/${id}`);
+            const data = await fetchApi<Parlamentar>(`/parlamentares/${id}`);
+
+            // Cache the result
+            await cache.set("parlamentares", `parlamentar_${id}`, data, TTL.PARLAMENTARES);
+
+            return data;
         } catch (error) {
             console.warn("API falhou, tentando buscar via fontes secundárias:", error);
             try {
@@ -311,7 +394,7 @@ export const api = {
                 const found = normalizedData.find(item => item.id === id || item.title.includes(id));
 
                 if (found) {
-                    return {
+                    const data = {
                         id: found.id,
                         nome: found.title,
                         partido: "Sem Partido",
@@ -324,6 +407,11 @@ export const api = {
                         projetos_aprovados: 0,
                         presenca_sessoes: 100
                     };
+
+                    // Cache fallback data
+                    await cache.set("parlamentares", `parlamentar_${id}`, data, TTL.PARLAMENTARES);
+
+                    return data;
                 }
                 throw new Error("Parlamentar não encontrado nas fontes secundárias");
             } catch (fallbackError) {
@@ -343,7 +431,12 @@ export const api = {
             });
         } catch (error) {
             console.warn("API falhou, favorito salvo localmente:", error);
-            // MOCK_FAVORITOS.add(leiId);
+            savePendingAction({
+                id: `fav-${leiId}-${Date.now()}`,
+                type: "ADD_FAVORITO",
+                payload: { leiId },
+                timestamp: Date.now()
+            });
             return { success: true };
         }
     },
@@ -358,7 +451,12 @@ export const api = {
             });
         } catch (error) {
             console.warn("API falhou, favorito removido localmente:", error);
-            // MOCK_FAVORITOS.delete(leiId);
+            savePendingAction({
+                id: `unfav-${leiId}-${Date.now()}`,
+                type: "REMOVE_FAVORITO",
+                payload: { leiId },
+                timestamp: Date.now()
+            });
             return { success: true };
         }
     },
@@ -438,6 +536,12 @@ export const api = {
             };
             // MOCK_ALERTAS.push(novoAlerta);
             addAlertaLocal(novoAlerta);
+            savePendingAction({
+                id: `alert-${termo}-${Date.now()}`,
+                type: "CREATE_ALERTA",
+                payload: { termo },
+                timestamp: Date.now()
+            });
             return novoAlerta;
         }
     },
@@ -453,6 +557,12 @@ export const api = {
             // const index = MOCK_ALERTAS.findIndex(a => a.id === id);
             // if (index !== -1) MOCK_ALERTAS.splice(index, 1);
             removeAlertaLocal(id);
+            savePendingAction({
+                id: `del-alert-${id}-${Date.now()}`,
+                type: "DELETE_ALERTA",
+                payload: { id },
+                timestamp: Date.now()
+            });
             return { success: true };
         }
     },
@@ -495,6 +605,12 @@ export const api = {
             console.warn("API falhou, preferência salva localmente:", error);
             const novaPref: PreferenciaTema = { tema, created_at: new Date().toISOString() };
             // MOCK_PREFERENCIAS.push(novaPref);
+            savePendingAction({
+                id: `pref-${tema}-${Date.now()}`,
+                type: "ADD_PREFERENCIA",
+                payload: { tema },
+                timestamp: Date.now()
+            });
             return novaPref;
         }
     },
@@ -511,14 +627,32 @@ export const api = {
             console.warn("API falhou, preferência removida localmente:", error);
             // const index = MOCK_PREFERENCIAS.findIndex(p => p.tema === tema);
             // if (index !== -1) MOCK_PREFERENCIAS.splice(index, 1);
+            savePendingAction({
+                id: `unpref-${tema}-${Date.now()}`,
+                type: "REMOVE_PREFERENCIA",
+                payload: { tema },
+                timestamp: Date.now()
+            });
             return { success: true };
         }
     },
 
     // Estatisticas endpoints
     getEstatisticas: async () => {
+        // Try cache first
+        const cached = await cache.get<Estatisticas>("estatisticas", "stats");
+        if (cached) {
+            console.log("[API] Cache hit for estatisticas");
+            return cached;
+        }
+
         try {
-            return await fetchApi<Estatisticas>("/estatisticas");
+            const data = await fetchApi<Estatisticas>("/estatisticas");
+
+            // Cache with short TTL (30 minutes)
+            await cache.set("estatisticas", "stats", data, TTL.ESTATISTICAS);
+
+            return data;
         } catch (error) {
             console.warn("API falhou, retornando zeros:", error);
             return {

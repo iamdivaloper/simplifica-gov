@@ -7,33 +7,40 @@ import {
     fetchTSE,
     fetchCNJ
 } from './external-apis';
+import { unstable_cache } from "next/cache";
 
 const PRIMARY_API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.simplificagov.com';
 const PRIMARY_TIMEOUT_MS = 3000;
 
-export async function fetchGovernmentData(query: string): Promise<NormalizedItem[]> {
-    console.log(`[DataService] Starting search for: "${query}"`);
+// Cached version of the data fetching function
+const getCachedGovernmentData = unstable_cache(
+    async (query: string) => {
+        console.log(`[Cache Miss] Fetching fresh data for: "${query}"`);
 
-    try {
-        // 1. Attempt Primary API with timeout
-        const primaryData = await fetchPrimaryApi(query);
-        console.log('[DataService] Primary API success');
-        return normalizeData(primaryData, query);
-    } catch (error) {
-        console.warn('[DataService] Primary API failed or timed out. Initiating fallback strategy.', error);
+        // 1. Try Primary API
+        try {
+            const primaryData = await fetchPrimaryApi(query);
+            // The original logic returned normalized data directly if primary API succeeded.
+            // Let's ensure primaryData is not empty before normalizing and returning.
+            if (primaryData && primaryData.length > 0) {
+                console.log('[DataService] Primary API success (within cache)');
+                return await normalizeData(primaryData, query);
+            }
+        } catch (e) {
+            console.warn("[DataService] Primary API failed or timed out (within cache). Trying secondary sources...", e);
+        }
 
-        // 2. Fallback: Parallel fetch from secondary sources
-        const fallbackResults = await Promise.allSettled([
-            fetchCamaraDeputados(query),
-            fetchSenadoFederal(query),
+        // 2. Fallback to Secondary APIs (Parallel)
+        const results = await Promise.allSettled([
+            fetchCamaraDeputados(query), // Corrected API name
+            fetchSenadoFederal(query),   // Corrected API name
             fetchQueridoDiario(query),
             fetchBaseDosDados(query),
             fetchTSE(query),
             fetchCNJ(query)
         ]);
-
         // Aggregate successful results
-        const aggregatedData = fallbackResults
+        const aggregatedData = results
             .filter(result => result.status === 'fulfilled')
             .map(result => (result as PromiseFulfilledResult<any>).value)
             .flatMap(res => res.data || []); // Flatten data arrays
@@ -47,7 +54,16 @@ export async function fetchGovernmentData(query: string): Promise<NormalizedItem
 
         // 3. Normalize aggregated data with AI
         return normalizeData(aggregatedData, query);
+    },
+    ['government-data'],
+    {
+        revalidate: 3600, // 1 hour cache
+        tags: ['government-data']
     }
+);
+
+export async function fetchGovernmentData(query: string): Promise<NormalizedItem[]> {
+    return getCachedGovernmentData(query);
 }
 
 export async function fetchRecentProjects(): Promise<NormalizedItem[]> {

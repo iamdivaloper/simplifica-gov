@@ -8,7 +8,18 @@ const STORAGE_KEYS = {
     PREFERENCIAS: "simplificagov_preferencias",
     ALERTAS: "simplificagov_alertas",
     LAST_SYNC: "simplificagov_last_sync",
+    PENDING_ACTIONS: "simplificagov_pending_actions",
 } as const;
+
+export interface PendingAction {
+    id: string;
+    type: "ADD_FAVORITO" | "REMOVE_FAVORITO" | "CREATE_ALERTA" | "DELETE_ALERTA" | "ADD_PREFERENCIA" | "REMOVE_PREFERENCIA";
+    payload: any;
+    timestamp: number;
+    retryCount?: number;
+    lastAttempt?: number;
+    priority?: number;
+}
 
 /**
  * Save favoritos to localStorage
@@ -231,6 +242,58 @@ export async function syncWithBackend(
 }
 
 /**
+ * Save a pending action to localStorage
+ */
+export function savePendingAction(action: PendingAction): void {
+    try {
+        const actions = getPendingActions();
+        actions.push(action);
+        localStorage.setItem(STORAGE_KEYS.PENDING_ACTIONS, JSON.stringify(actions));
+    } catch (error) {
+        console.error("Failed to save pending action:", error);
+    }
+}
+
+/**
+ * Get all pending actions from localStorage
+ */
+export function getPendingActions(): PendingAction[] {
+    try {
+        const stored = localStorage.getItem(STORAGE_KEYS.PENDING_ACTIONS);
+        return stored ? JSON.parse(stored) : [];
+    } catch (error) {
+        console.error("Failed to get pending actions:", error);
+        return [];
+    }
+}
+
+/**
+ * Update a pending action in localStorage
+ */
+export function updatePendingAction(id: string, updates: Partial<PendingAction>): void {
+    try {
+        const actions = getPendingActions();
+        const updated = actions.map(a => a.id === id ? { ...a, ...updates } : a);
+        localStorage.setItem(STORAGE_KEYS.PENDING_ACTIONS, JSON.stringify(updated));
+    } catch (error) {
+        console.error("Failed to update pending action:", error);
+    }
+}
+
+/**
+ * Remove a pending action from localStorage
+ */
+export function removePendingAction(id: string): void {
+    try {
+        const actions = getPendingActions();
+        const filtered = actions.filter(a => a.id !== id);
+        localStorage.setItem(STORAGE_KEYS.PENDING_ACTIONS, JSON.stringify(filtered));
+    } catch (error) {
+        console.error("Failed to remove pending action:", error);
+    }
+}
+
+/**
  * Clear all local storage data
  */
 export function clearAllStorage(): void {
@@ -239,6 +302,7 @@ export function clearAllStorage(): void {
         localStorage.removeItem(STORAGE_KEYS.PREFERENCIAS);
         localStorage.removeItem(STORAGE_KEYS.ALERTAS);
         localStorage.removeItem(STORAGE_KEYS.LAST_SYNC);
+        localStorage.removeItem(STORAGE_KEYS.PENDING_ACTIONS);
     } catch (error) {
         console.error("Failed to clear storage:", error);
     }
