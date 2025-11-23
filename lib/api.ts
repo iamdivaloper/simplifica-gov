@@ -1,6 +1,6 @@
 import { auth } from "./auth";
 
-export const API_BASE_URL = "https://simplificagov.com/api";
+export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://simplificagov.com/api";
 
 export interface Tramitacao {
     data: string;
