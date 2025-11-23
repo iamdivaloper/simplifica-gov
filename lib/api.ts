@@ -50,6 +50,25 @@ export interface Parlamentar {
     presenca_sessoes: number; // percentual
 }
 
+export interface Alerta {
+    id: string;
+    termo: string;
+    ativo: boolean;
+    created_at: string;
+}
+
+export interface PreferenciaTema {
+    tema: string;
+    nivel_interesse?: number;
+    created_at?: string;
+}
+
+export interface Estatisticas {
+    total_leis: number;
+    total_cidadaos: number;
+    total_parlamentares: number;
+}
+
 export interface ApiResponse<T> {
     success: boolean;
     data: T;
@@ -174,6 +193,8 @@ const MOCK_PARLAMENTARES: Parlamentar[] = [
 ];
 
 const MOCK_FAVORITOS: Set<string> = new Set();
+const MOCK_ALERTAS: Alerta[] = [];
+const MOCK_PREFERENCIAS: PreferenciaTema[] = [];
 
 async function fetchApi<T>(endpoint: string, options?: RequestInit): Promise<T> {
     const token = auth.getToken();
@@ -218,7 +239,6 @@ export const api = {
             return await fetchApi<Lei[]>(`/leis?${searchParams.toString()}`);
         } catch (error) {
             console.warn("API falhou, usando dados mockados:", error);
-            // Aplicar filtros nos dados mockados
             let filtered = [...MOCK_LEIS];
             if (params?.tipo) filtered = filtered.filter(l => l.tipo === params.tipo);
             if (params?.numero) filtered = filtered.filter(l => l.numero === params.numero);
@@ -312,7 +332,6 @@ export const api = {
         }
     },
 
-    // Parlamentares endpoints
     getParlamentares: async (params?: {
         limit?: number;
         offset?: number;
@@ -351,11 +370,10 @@ export const api = {
     },
 
     // Favoritos endpoints
-    addFavorito: async (cidadaoId: string, leiId: string) => {
+    addFavorito: async (leiId: string) => {
         try {
-            return await fetchApi<{ success: boolean }>(`/cidadao/${cidadaoId}/favoritos`, {
+            return await fetchApi<{ success: boolean }>(`/favoritos/${leiId}`, {
                 method: "POST",
-                body: JSON.stringify({ lei_id: leiId }),
             });
         } catch (error) {
             console.warn("API falhou, usando dados mockados:", error);
@@ -364,9 +382,9 @@ export const api = {
         }
     },
 
-    removeFavorito: async (cidadaoId: string, leiId: string) => {
+    removeFavorito: async (leiId: string) => {
         try {
-            return await fetchApi<{ success: boolean }>(`/cidadao/${cidadaoId}/favoritos/${leiId}`, {
+            return await fetchApi<{ success: boolean }>(`/favoritos/${leiId}`, {
                 method: "DELETE",
             });
         } catch (error) {
@@ -376,9 +394,9 @@ export const api = {
         }
     },
 
-    getFavoritos: async (cidadaoId: string) => {
+    getFavoritos: async () => {
         try {
-            return await fetchApi<Lei[]>(`/cidadao/${cidadaoId}/favoritos`);
+            return await fetchApi<Lei[]>("/favoritos");
         } catch (error) {
             console.warn("API falhou, usando dados mockados:", error);
             const favoritoIds = Array.from(MOCK_FAVORITOS);
@@ -386,13 +404,119 @@ export const api = {
         }
     },
 
-    isFavorito: async (cidadaoId: string, leiId: string) => {
+    isFavorito: async (leiId: string) => {
         try {
-            const favoritos = await api.getFavoritos(cidadaoId);
-            return favoritos.some(lei => lei.id === leiId);
+            const res = await fetchApi<{ is_favorito: boolean }>(`/favoritos/verificar/${leiId}`);
+            return res.is_favorito;
         } catch (error) {
             console.warn("API falhou, usando dados mockados:", error);
             return MOCK_FAVORITOS.has(leiId);
         }
     },
+
+    // Alertas endpoints
+    getAlertas: async () => {
+        try {
+            return await fetchApi<Alerta[]>("/alertas");
+        } catch (error) {
+            console.warn("API falhou, usando dados mockados:", error);
+            return MOCK_ALERTAS;
+        }
+    },
+
+    createAlerta: async (termo: string) => {
+        try {
+            return await fetchApi<Alerta>("/alertas", {
+                method: "POST",
+                body: JSON.stringify({ termo }),
+            });
+        } catch (error) {
+            console.warn("API falhou, usando dados mockados:", error);
+            const novoAlerta: Alerta = {
+                id: String(Date.now()),
+                termo,
+                ativo: true,
+                created_at: new Date().toISOString()
+            };
+            MOCK_ALERTAS.push(novoAlerta);
+            return novoAlerta;
+        }
+    },
+
+    deleteAlerta: async (id: string) => {
+        try {
+            return await fetchApi<{ success: boolean }>(`/alertas/${id}`, {
+                method: "DELETE",
+            });
+        } catch (error) {
+            console.warn("API falhou, usando dados mockados:", error);
+            const index = MOCK_ALERTAS.findIndex(a => a.id === id);
+            if (index !== -1) MOCK_ALERTAS.splice(index, 1);
+            return { success: true };
+        }
+    },
+
+    markAlertaAsRead: async (id: string) => {
+        try {
+            return await fetchApi<{ success: boolean }>(`/alertas/${id}/read`, {
+                method: "POST",
+            });
+        } catch (error) {
+            console.warn("API falhou, usando dados mockados:", error);
+            // In a real app we would update the read status, but our mock Alerta doesn't have 'read' property yet.
+            // We'll assume the UI handles the visual state.
+            return { success: true };
+        }
+    },
+
+    // Preferencias endpoints
+    getPreferencias: async () => {
+        try {
+            return await fetchApi<PreferenciaTema[]>("/preferencias-temas");
+        } catch (error) {
+            console.warn("API falhou, usando dados mockados:", error);
+            return MOCK_PREFERENCIAS;
+        }
+    },
+
+    addPreferencia: async (tema: string) => {
+        try {
+            return await fetchApi<PreferenciaTema>("/preferencias-temas", {
+                method: "POST",
+                body: JSON.stringify({ tema }),
+            });
+        } catch (error) {
+            console.warn("API falhou, usando dados mockados:", error);
+            const novaPref: PreferenciaTema = { tema, created_at: new Date().toISOString() };
+            MOCK_PREFERENCIAS.push(novaPref);
+            return novaPref;
+        }
+    },
+
+    removePreferencia: async (tema: string) => {
+        try {
+            return await fetchApi<{ success: boolean }>(`/preferencias-temas/${tema}`, {
+                method: "DELETE",
+            });
+        } catch (error) {
+            console.warn("API falhou, usando dados mockados:", error);
+            const index = MOCK_PREFERENCIAS.findIndex(p => p.tema === tema);
+            if (index !== -1) MOCK_PREFERENCIAS.splice(index, 1);
+            return { success: true };
+        }
+    },
+
+    // Estatisticas endpoints
+    getEstatisticas: async () => {
+        try {
+            return await fetchApi<Estatisticas>("/estatisticas");
+        } catch (error) {
+            console.warn("API falhou, usando dados mockados:", error);
+            return {
+                total_leis: MOCK_LEIS.length,
+                total_cidadaos: MOCK_CIDADAOS.length,
+                total_parlamentares: MOCK_PARLAMENTARES.length
+            };
+        }
+    }
 };

@@ -15,13 +15,25 @@ import { cn } from "@/lib/utils"
 
 type AlertFilter = "todos" | "nao-lidos" | "urgentes"
 
-import { api, Cidadao } from "@/lib/api"
+import { api, Cidadao, Lei, Alerta } from "@/lib/api"
 
 interface PerfilContentProps {
   cidadao?: Cidadao
+  favoritos: Lei[]
+  alertas: Alerta[]
 }
 
-function PerfilContent({ cidadao }: PerfilContentProps) {
+interface UIAlert {
+  id: string
+  title: string
+  message: string
+  type: "normal" | "urgente"
+  category: string
+  time: string
+  read: boolean
+}
+
+function PerfilContent({ cidadao, favoritos, alertas }: PerfilContentProps) {
   const searchParams = useSearchParams()
   const router = useRouter()
   const tabFromUrl = searchParams.get("tab") as "dados" | "favoritos" | "alertas" | null
@@ -29,6 +41,18 @@ function PerfilContent({ cidadao }: PerfilContentProps) {
   const [activeTab, setActiveTab] = useState<"dados" | "favoritos" | "alertas">(tabFromUrl || "dados")
   const [alertFilter, setAlertFilter] = useState<AlertFilter>("todos")
   const [isSaving, setIsSaving] = useState(false)
+
+  // Local state for optimistic updates
+  const [localFavoritos, setLocalFavoritos] = useState<Lei[]>(favoritos)
+  const [localAlertas, setLocalAlertas] = useState<UIAlert[]>(alertas.map(a => ({
+    id: a.id,
+    title: `Alerta: ${a.termo}`,
+    message: "Nova atualização detectada para este tema.",
+    type: "normal",
+    category: a.termo,
+    time: new Date(a.created_at).toLocaleDateString("pt-BR"),
+    read: false
+  })))
 
   useEffect(() => {
     if (tabFromUrl && tabFromUrl !== activeTab) {
@@ -49,88 +73,31 @@ function PerfilContent({ cidadao }: PerfilContentProps) {
     }, 1000)
   }
 
-  const favoriteProjects = [
-    {
-      id: "pl-2630",
-      title: "PL 2630 - Regras para Redes Sociais",
-      tag: "Tecnologia",
-      summary: "Define regras para moderação de conteúdo e transparência em redes sociais. Busca combater notícias falsas.",
-      color: "bg-blue-100 text-blue-700",
-      date: "Adicionado em 18/05/2024",
-    },
-    {
-      id: "pl-transporte",
-      title: "Tarifa Zero no Transporte",
-      tag: "Transporte",
-      summary: "Propõe gratuidade no transporte público municipal para estudantes e idosos.",
-      color: "bg-green-100 text-green-700",
-      date: "Adicionado em 10/05/2024",
-    },
-    {
-      id: "pl-saude",
-      title: "Ampliação do SUS Digital",
-      tag: "Saúde",
-      summary: "Expande o atendimento médico online pelo SUS, facilitando consultas remotas.",
-      color: "bg-red-100 text-red-700",
-      date: "Adicionado em 02/05/2024",
-    },
-  ]
+  const handleRemoveFavorito = async (id: string) => {
+    try {
+      await api.removeFavorito(id)
+      setLocalFavoritos(prev => prev.filter(f => f.id !== id))
+    } catch (error) {
+      console.error("Failed to remove favorite", error)
+    }
+  }
 
-  const allAlerts = [
-    {
-      id: "1",
-      title: "Votação Importante Hoje!",
-      message: "O PL 2630 sobre redes sociais será votado hoje às 14h. Acompanhe ao vivo.",
-      type: "urgente" as const,
-      category: "Tecnologia",
-      time: "Há 2 horas",
-      read: false,
-    },
-    {
-      id: "2",
-      title: "Nova Lei Aprovada",
-      message: "A lei de Tarifa Zero no transporte foi aprovada! Veja como isso te afeta.",
-      type: "normal" as const,
-      category: "Transporte",
-      time: "Ontem às 18h",
-      read: false,
-    },
-    {
-      id: "3",
-      title: "Seu Resumo Diário",
-      message: "3 novos projetos sobre Saúde Pública foram apresentados hoje.",
-      type: "normal" as const,
-      category: "Saúde",
-      time: "Hoje às 18h",
-      read: true,
-    },
-    {
-      id: "4",
-      title: "Atenção: Prazo Importante",
-      message: "Consulta pública sobre educação termina em 3 dias. Participe!",
-      type: "urgente" as const,
-      category: "Educação",
-      time: "Há 5 horas",
-      read: false,
-    },
-    {
-      id: "5",
-      title: "Atualização de Projeto",
-      message: "O PL sobre Crédito e Dívidas teve alterações no texto. Confira.",
-      type: "normal" as const,
-      category: "Economia",
-      time: "Há 1 dia",
-      read: true,
-    },
-  ]
+  const handleMarkAsRead = async (id: string) => {
+    try {
+      await api.markAlertaAsRead(id)
+      setLocalAlertas(prev => prev.map(a => a.id === id ? { ...a, read: true } : a))
+    } catch (error) {
+      console.error("Failed to mark alert as read", error)
+    }
+  }
 
-  const filteredAlerts = allAlerts.filter((alert) => {
+  const filteredAlerts = localAlertas.filter((alert) => {
     if (alertFilter === "nao-lidos") return !alert.read
     if (alertFilter === "urgentes") return alert.type === "urgente"
     return true
   })
 
-  const unreadCount = allAlerts.filter((a) => !a.read).length
+  const unreadCount = localAlertas.filter((a) => !a.read).length
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50 font-sans">
@@ -372,7 +339,7 @@ function PerfilContent({ cidadao }: PerfilContentProps) {
                           alertFilter === "todos" ? "shadow-md" : "border-gray-300 text-gray-700 hover:bg-gray-50"
                         )}
                       >
-                        Todos ({allAlerts.length})
+                        Todos ({localAlertas.length})
                       </Button>
                       <Button
                         size="sm"
@@ -394,7 +361,7 @@ function PerfilContent({ cidadao }: PerfilContentProps) {
                           alertFilter === "urgentes" ? "bg-red-600 hover:bg-red-700 shadow-md" : "border-gray-300 text-gray-700 hover:bg-gray-50"
                         )}
                       >
-                        Urgentes ({allAlerts.filter((a) => a.type === "urgente").length})
+                        Urgentes ({localAlertas.filter((a) => a.type === "urgente").length})
                       </Button>
                     </div>
                   </div>
@@ -443,7 +410,12 @@ function PerfilContent({ cidadao }: PerfilContentProps) {
                                     <span className="text-xs text-gray-500 font-medium">{alert.time}</span>
                                   </div>
                                   {!alert.read && (
-                                    <Button size="sm" variant="ghost" className="text-xs text-blue-600 hover:text-blue-700 hover:bg-blue-50 font-semibold rounded-lg">
+                                    <Button
+                                      size="sm"
+                                      variant="ghost"
+                                      className="text-xs text-blue-600 hover:text-blue-700 hover:bg-blue-50 font-semibold rounded-lg"
+                                      onClick={() => handleMarkAsRead(alert.id)}
+                                    >
                                       Marcar como lido
                                     </Button>
                                   )}
@@ -463,6 +435,7 @@ function PerfilContent({ cidadao }: PerfilContentProps) {
                       <p className="text-gray-600 text-lg">
                         {alertFilter === "nao-lidos" && "Você não tem alertas não lidos"}
                         {alertFilter === "urgentes" && "Não há alertas urgentes no momento"}
+                        {alertFilter === "todos" && "Você não tem nenhum alerta"}
                       </p>
                     </div>
                   )}
@@ -485,27 +458,32 @@ function PerfilContent({ cidadao }: PerfilContentProps) {
                   </div>
 
                   {/* Favorites List */}
-                  {favoriteProjects.length > 0 ? (
+                  {localFavoritos.length > 0 ? (
                     <div className="grid gap-4">
-                      {favoriteProjects.map((project) => (
+                      {localFavoritos.map((project) => (
                         <Card key={project.id} className="hover:shadow-xl transition-all border-gray-100 rounded-2xl">
                           <CardContent className="p-6">
                             <div className="flex items-start justify-between gap-4">
                               <div className="flex-1 space-y-3">
                                 <div className="flex items-start gap-3">
-                                  <Badge className={`${project.color} border-0 font-bold shadow-sm`}>{project.tag}</Badge>
+                                  <Badge className={`bg-blue-100 text-blue-700 border-0 font-bold shadow-sm`}>{project.tipo}</Badge>
                                   <Star className="w-5 h-5 text-yellow-500 fill-yellow-500 flex-shrink-0" />
                                 </div>
-                                <h3 className="font-bold text-lg text-gray-900">{project.title}</h3>
-                                <p className="text-gray-600 text-sm leading-relaxed">{project.summary}</p>
-                                <p className="text-xs text-gray-500 font-medium">{project.date}</p>
+                                <h3 className="font-bold text-lg text-gray-900">{project.ementa}</h3>
+                                <p className="text-gray-600 text-sm leading-relaxed line-clamp-2">{project.traducao?.resumo || project.ementa}</p>
+                                <p className="text-xs text-gray-500 font-medium">{project.data_apresentacao}</p>
                                 <div className="flex gap-3 pt-2 flex-wrap">
                                   <Link href={`/projetos-de-lei/${project.id}`}>
                                     <Button size="sm" className="font-bold shadow-md hover:shadow-lg transition-all rounded-xl">
                                       Ver Detalhes <ArrowRight className="w-4 h-4 ml-1" />
                                     </Button>
                                   </Link>
-                                  <Button size="sm" variant="outline" className="text-red-600 hover:bg-red-50 border-red-200 font-bold rounded-xl">
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    className="text-red-600 hover:bg-red-50 border-red-200 font-bold rounded-xl"
+                                    onClick={() => handleRemoveFavorito(project.id)}
+                                  >
                                     <Trash2 className="w-4 h-4 mr-1" /> Remover
                                   </Button>
                                 </div>
@@ -540,19 +518,23 @@ function PerfilContent({ cidadao }: PerfilContentProps) {
 }
 export default async function PerfilPage() {
   let cidadao: Cidadao | undefined
+  let favoritos: Lei[] = []
+  let alertas: Alerta[] = []
 
   try {
     const cidadaos = await api.getCidadaos()
     if (cidadaos && cidadaos.length > 0) {
       cidadao = cidadaos[0]
     }
+    favoritos = await api.getFavoritos()
+    alertas = await api.getAlertas()
   } catch (error) {
-    console.error("Failed to fetch citizen data", error)
+    console.error("Failed to fetch data", error)
   }
 
   return (
     <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div></div>}>
-      <PerfilContent cidadao={cidadao} />
+      <PerfilContent cidadao={cidadao} favoritos={favoritos} alertas={alertas} />
     </Suspense>
   )
 }

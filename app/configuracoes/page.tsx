@@ -1,6 +1,7 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { api } from "@/lib/api"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Switch } from "@/components/ui/switch"
@@ -49,12 +50,26 @@ const INTERESTS = [
 ]
 
 export default function ConfiguracoesPage() {
-    const [selectedInterests, setSelectedInterests] = useState<string[]>([
-        "Saúde Pública",
-        "Educação Infantil",
-        "Transporte Público",
-    ])
+    const [selectedInterests, setSelectedInterests] = useState<string[]>([])
+    const [initialInterests, setInitialInterests] = useState<string[]>([])
+    const [isLoading, setIsLoading] = useState(true)
     const [isSaving, setIsSaving] = useState(false)
+
+    useEffect(() => {
+        const loadPreferences = async () => {
+            try {
+                const prefs = await api.getPreferencias()
+                const themes = prefs.map(p => p.tema)
+                setSelectedInterests(themes)
+                setInitialInterests(themes)
+            } catch (error) {
+                console.error("Failed to load preferences", error)
+            } finally {
+                setIsLoading(false)
+            }
+        }
+        loadPreferences()
+    }, [])
 
     const toggleInterest = (interest: string) => {
         setSelectedInterests((prev) =>
@@ -62,12 +77,29 @@ export default function ConfiguracoesPage() {
         )
     }
 
-    const handleSave = () => {
+    const handleSave = async () => {
         setIsSaving(true)
-        setTimeout(() => {
-            setIsSaving(false)
+        try {
+            // Find added interests
+            const added = selectedInterests.filter(i => !initialInterests.includes(i))
+            // Find removed interests
+            const removed = initialInterests.filter(i => !selectedInterests.includes(i))
+
+            // Execute updates
+            await Promise.all([
+                ...added.map(interest => api.addPreferencia(interest)),
+                ...removed.map(interest => api.removePreferencia(interest))
+            ])
+
+            // Update initial state to match current
+            setInitialInterests(selectedInterests)
             alert("✅ Preferências salvas com sucesso!")
-        }, 1500)
+        } catch (error) {
+            console.error("Failed to save preferences", error)
+            alert("❌ Erro ao salvar preferências. Tente novamente.")
+        } finally {
+            setIsSaving(false)
+        }
     }
 
     return (
