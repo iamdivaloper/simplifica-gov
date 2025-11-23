@@ -26,7 +26,7 @@ export function SiteHeader() {
     { href: "/", label: "Início", icon: Home },
     { href: "/projetos-de-lei", label: "Explorar Leis", icon: FileText },
     { href: "/parlamentares", label: "Políticos", icon: Users },
-    { href: "/resumo-diario", label: "Resumo Diário", icon: Newspaper },
+    { href: "/resumo-diario", label: "Atualizações", icon: Newspaper },
   ]
 
   return (
@@ -35,10 +35,10 @@ export function SiteHeader() {
         <div className="flex items-center gap-8">
           <Link href="/" className="flex items-center gap-2 group" aria-label="Página inicial do SimplificaGov">
             <Image
-              src="/logo-full.png"
+              src="/logo-navbar.png"
               alt="SimplificaGov - Logotipo"
-              width={200}
-              height={48}
+              width={180}
+              height={40}
               className="transition-transform group-hover:scale-105"
               priority
             />

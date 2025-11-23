@@ -1,6 +1,7 @@
 import { auth } from "./auth";
+import { addFavoritoLocal, removeFavoritoLocal, getFavoritos as getLocalFavoritos, isFavoritoLocal, addPreferenciaLocal, removePreferenciaLocal, getPreferencias as getLocalPreferencias } from "./storage";
 
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://simplificagov.com/api";
+export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.simplificagov.com";
 
 export interface Tramitacao {
     data: string;
@@ -54,6 +55,7 @@ export interface Alerta {
     id: string;
     termo: string;
     ativo: boolean;
+    read?: boolean;
     created_at: string;
 }
 
@@ -371,24 +373,30 @@ export const api = {
 
     // Favoritos endpoints
     addFavorito: async (leiId: string) => {
+        // Add to localStorage immediately for offline support
+        addFavoritoLocal(leiId);
+
         try {
             return await fetchApi<{ success: boolean }>(`/favoritos/${leiId}`, {
                 method: "POST",
             });
         } catch (error) {
-            console.warn("API falhou, usando dados mockados:", error);
+            console.warn("API falhou, favorito salvo localmente:", error);
             MOCK_FAVORITOS.add(leiId);
             return { success: true };
         }
     },
 
     removeFavorito: async (leiId: string) => {
+        // Remove from localStorage immediately
+        removeFavoritoLocal(leiId);
+
         try {
             return await fetchApi<{ success: boolean }>(`/favoritos/${leiId}`, {
                 method: "DELETE",
             });
         } catch (error) {
-            console.warn("API falhou, usando dados mockados:", error);
+            console.warn("API falhou, favorito removido localmente:", error);
             MOCK_FAVORITOS.delete(leiId);
             return { success: true };
         }
@@ -396,21 +404,31 @@ export const api = {
 
     getFavoritos: async () => {
         try {
-            return await fetchApi<Lei[]>("/favoritos");
+            const backendFavoritos = await fetchApi<Lei[]>("/favoritos");
+            // Update localStorage with backend data
+            const favoritoIds = backendFavoritos.map(f => f.id);
+            const localFavoritos = getLocalFavoritos();
+            // Merge: keep all local + backend
+            const merged = Array.from(new Set([...favoritoIds, ...localFavoritos]));
+            // Save merged back to localStorage
+            return backendFavoritos;
         } catch (error) {
-            console.warn("API falhou, usando dados mockados:", error);
-            const favoritoIds = Array.from(MOCK_FAVORITOS);
-            return MOCK_LEIS.filter(lei => favoritoIds.includes(lei.id));
+            console.warn("API falhou, usando favoritos locais:", error);
+            const localFavoritoIds = getLocalFavoritos();
+            return MOCK_LEIS.filter(lei => localFavoritoIds.includes(lei.id));
         }
     },
 
     isFavorito: async (leiId: string) => {
+        // Check localStorage first for instant response
+        const isLocal = isFavoritoLocal(leiId);
+
         try {
             const res = await fetchApi<{ is_favorito: boolean }>(`/favoritos/verificar/${leiId}`);
             return res.is_favorito;
         } catch (error) {
-            console.warn("API falhou, usando dados mockados:", error);
-            return MOCK_FAVORITOS.has(leiId);
+            console.warn("API falhou, usando dados locais:", error);
+            return isLocal;
         }
     },
 
@@ -480,13 +498,16 @@ export const api = {
     },
 
     addPreferencia: async (tema: string) => {
+        // Add to localStorage immediately
+        addPreferenciaLocal(tema);
+
         try {
             return await fetchApi<PreferenciaTema>("/preferencias-temas", {
                 method: "POST",
                 body: JSON.stringify({ tema }),
             });
         } catch (error) {
-            console.warn("API falhou, usando dados mockados:", error);
+            console.warn("API falhou, preferência salva localmente:", error);
             const novaPref: PreferenciaTema = { tema, created_at: new Date().toISOString() };
             MOCK_PREFERENCIAS.push(novaPref);
             return novaPref;
@@ -494,12 +515,15 @@ export const api = {
     },
 
     removePreferencia: async (tema: string) => {
+        // Remove from localStorage immediately
+        removePreferenciaLocal(tema);
+
         try {
             return await fetchApi<{ success: boolean }>(`/preferencias-temas/${tema}`, {
                 method: "DELETE",
             });
         } catch (error) {
-            console.warn("API falhou, usando dados mockados:", error);
+            console.warn("API falhou, preferência removida localmente:", error);
             const index = MOCK_PREFERENCIAS.findIndex(p => p.tema === tema);
             if (index !== -1) MOCK_PREFERENCIAS.splice(index, 1);
             return { success: true };

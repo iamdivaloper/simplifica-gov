@@ -23,7 +23,7 @@ export function WhatsappMockup({ className }: { className?: string }) {
       <div className="bg-primary px-4 py-2 flex items-center gap-2 text-white">
         <ArrowLeft className="w-5 h-5" />
         <Avatar className="h-9 w-9 border-2 border-white/30 bg-white">
-          <AvatarImage src="/simplinho.png" className="object-cover" />
+          <AvatarImage src="/whatsapp-contact.png" className="object-cover" />
           <AvatarFallback className="bg-primary text-white font-bold">SG</AvatarFallback>
         </Avatar>
         <div className="flex-1">

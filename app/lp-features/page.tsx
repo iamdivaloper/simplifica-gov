@@ -11,25 +11,25 @@ export default function FeaturesLP() {
     <div className="min-h-screen bg-gray-50 font-sans">
       <main className="pb-20">
         {/* Hero Section */}
-        <section className="bg-gradient-to-br from-blue-600 to-purple-700 text-white py-20">
+        <section className="bg-white border-b py-20">
           <div className="container mx-auto px-4 text-center">
-            <Badge className="mb-6 bg-white/10 text-blue-100 hover:bg-white/20 border-none px-4 py-1.5 text-sm font-medium backdrop-blur-sm">
+            <Badge className="mb-6 bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-100 px-4 py-1.5 text-sm font-medium">
               ✨ Funcionalidades do SimplificaGov
             </Badge>
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight">
+            <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight text-gray-900">
               Tudo para você exercer<br className="hidden md:block" /> sua cidadania com poder
             </h1>
-            <p className="text-xl text-blue-100 max-w-2xl mx-auto leading-relaxed mb-10">
-              Uma plataforma completa, conectada aos dados oficiais e desenhada para traduzir a complexidade de Brasília para a sua realidade.
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed mb-10">
+              Uma plataforma completa, conectada aos dados oficiais e desenhada para traduzir a complexidade de Brasília para a sua realidade. 🇧🇷
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link href="/cadastro">
-                <Button size="lg" className="bg-white text-primary hover:bg-blue-50 font-bold h-12 px-8 shadow-lg">
+                <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white font-bold h-12 px-8 shadow-md rounded-full">
                   Criar Conta Gratuita
                 </Button>
               </Link>
               <Link href="/projetos-de-lei">
-                <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 font-semibold h-12 px-8">
+                <Button size="lg" variant="outline" className="border-gray-200 hover:border-blue-300 text-gray-700 hover:text-blue-700 hover:bg-blue-50 font-semibold h-12 px-8 rounded-full">
                   Explorar Projetos
                 </Button>
               </Link>
@@ -41,10 +41,10 @@ export default function FeaturesLP() {
           <Tabs defaultValue="cidadao" className="max-w-5xl mx-auto mb-20">
             <div className="flex justify-center mb-12">
               <TabsList className="grid w-full max-w-md grid-cols-2 h-12 bg-white border border-gray-200 shadow-sm rounded-full p-1">
-                <TabsTrigger value="cidadao" className="rounded-full text-sm font-semibold data-[state=active]:bg-primary data-[state=active]:text-white">
+                <TabsTrigger value="cidadao" className="rounded-full text-sm font-semibold data-[state=active]:bg-blue-600 data-[state=active]:text-white">
                   Para o Cidadão
                 </TabsTrigger>
-                <TabsTrigger value="tecnologia" className="rounded-full text-sm font-semibold data-[state=active]:bg-primary data-[state=active]:text-white">
+                <TabsTrigger value="tecnologia" className="rounded-full text-sm font-semibold data-[state=active]:bg-blue-600 data-[state=active]:text-white">
                   Nossa Tecnologia
                 </TabsTrigger>
               </TabsList>
@@ -97,15 +97,15 @@ export default function FeaturesLP() {
             </TabsContent>
           </Tabs>
 
-          <div className="bg-gradient-to-r from-gray-900 to-slate-800 rounded-3xl p-12 text-center text-white shadow-2xl relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-full h-full bg-[url('/grid-pattern.svg')] opacity-10"></div>
+          <div className="bg-white rounded-3xl p-12 text-center shadow-lg border border-gray-100 relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-blue-400"></div>
             <div className="relative z-10 max-w-2xl mx-auto">
-              <h2 className="text-3xl font-bold mb-6">Pronto para transformar sua cidadania?</h2>
-              <p className="text-gray-300 mb-8 text-lg">
-                Junte-se a milhares de brasileiros que já estão acompanhando a política de perto, de forma simples e rápida.
+              <h2 className="text-3xl font-bold mb-6 text-gray-900">Pronto para transformar sua cidadania?</h2>
+              <p className="text-gray-600 mb-8 text-lg">
+                Junte-se a milhares de brasileiros que já estão acompanhando a política de perto, de forma simples e rápida. 🚀
               </p>
               <Link href="/cadastro">
-                <Button size="lg" className="h-14 px-8 text-lg font-bold bg-primary hover:bg-blue-600 shadow-lg hover:shadow-blue-900/20 transition-all">
+                <Button size="lg" className="h-14 px-8 text-lg font-bold bg-blue-600 hover:bg-blue-700 shadow-md hover:shadow-lg transition-all rounded-full">
                   Começar Agora <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>

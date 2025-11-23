@@ -2,8 +2,8 @@
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
 import { Search, Mic, MapPin } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 interface SearchSectionProps {
     searchTerm: string
@@ -14,12 +14,12 @@ interface SearchSectionProps {
 
 export function SearchSection({ searchTerm, onSearchChange, activeFilter, onFilterChange }: SearchSectionProps) {
     return (
-        <section className="bg-white border-b pb-12 pt-8">
+        <section className="bg-white border-b pb-12 pt-8" aria-label="Busca e Filtros">
             <div className="container mx-auto px-4">
                 {/* Hyperlocal Chip */}
                 <div className="flex justify-center mb-8">
                     <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-700 px-4 py-2 rounded-full text-sm font-medium border border-blue-100 shadow-sm animate-in fade-in slide-in-from-top-4 duration-700">
-                        <MapPin className="h-4 w-4" />
+                        <MapPin className="h-4 w-4" aria-hidden="true" />
                         <span>
                             Projetos que afetam <strong>São Paulo, SP</strong> (01310-000)
                         </span>
@@ -31,23 +31,29 @@ export function SearchSection({ searchTerm, onSearchChange, activeFilter, onFilt
                     <p className="text-lg text-gray-600">Digite um tema, uma palavra ou o número da lei. O Simplinho te ajuda a achar.</p>
 
                     {/* Search Bar */}
-                    <div className="relative max-w-2xl mx-auto">
+                    <div className="relative max-w-2xl mx-auto" role="search">
                         <div className="relative flex items-center">
-                            <Search className="absolute left-4 h-5 w-5 text-gray-400" />
+                            <Search className="absolute left-4 h-5 w-5 text-gray-400" aria-hidden="true" />
                             <Input
                                 value={searchTerm}
                                 onChange={(e) => onSearchChange(e.target.value)}
-                                className="h-14 pl-12 pr-12 rounded-full text-lg shadow-md border-gray-200 focus-visible:ring-primary"
+                                className="h-14 pl-12 pr-12 rounded-full text-lg shadow-md border-gray-200 focus-visible:ring-blue-600"
                                 placeholder="Ex: creches, salário mínimo, internet..."
+                                aria-label="Buscar projetos de lei por tema, palavra ou número"
                             />
-                            <Button variant="ghost" size="icon" className="absolute right-2 rounded-full hover:bg-gray-100">
-                                <Mic className="h-5 w-5 text-primary" />
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="absolute right-2 rounded-full hover:bg-gray-100"
+                                aria-label="Busca por voz"
+                            >
+                                <Mic className="h-5 w-5 text-blue-600" aria-hidden="true" />
                             </Button>
                         </div>
                     </div>
 
                     {/* Filters */}
-                    <div className="flex flex-wrap justify-center gap-2 pt-2">
+                    <div className="flex flex-wrap justify-center gap-2 pt-2" role="group" aria-label="Filtros de projetos">
                         {[
                             "Todos",
                             "Saúde",
@@ -59,17 +65,20 @@ export function SearchSection({ searchTerm, onSearchChange, activeFilter, onFilt
                             "Moradia",
                             "Seu Bairro",
                         ].map((filter) => (
-                            <Badge
+                            <Button
                                 key={filter}
-                                variant={activeFilter === filter ? "default" : "secondary"}
+                                variant={activeFilter === filter ? "default" : "outline"}
                                 onClick={() => onFilterChange(filter)}
-                                className={`px-4 py-2 text-sm cursor-pointer transition-colors ${activeFilter === filter
-                                    ? "bg-primary text-white hover:bg-primary/90"
-                                    : "hover:bg-primary hover:text-white"
-                                    }`}
+                                aria-pressed={activeFilter === filter}
+                                className={cn(
+                                    "px-4 py-2 text-sm rounded-full transition-all border-2",
+                                    activeFilter === filter
+                                        ? "bg-blue-600 text-white border-blue-600 shadow-md hover:bg-blue-700"
+                                        : "bg-white text-gray-600 border-gray-200 hover:border-blue-400 hover:text-blue-600 hover:bg-blue-50"
+                                )}
                             >
                                 {filter}
-                            </Badge>
+                            </Button>
                         ))}
                     </div>
                 </div>

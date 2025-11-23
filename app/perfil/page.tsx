@@ -12,6 +12,7 @@ import { User, MapPin, Bell, LogOut, Settings, Save, Sparkles, Heart, ArrowRight
 import Link from "next/link"
 import Image from "next/image"
 import { cn } from "@/lib/utils"
+import { ProtectedRoute } from "@/components/protected-route"
 
 type AlertFilter = "todos" | "nao-lidos" | "urgentes"
 
@@ -58,7 +59,7 @@ function PerfilContent({ cidadao, favoritos, alertas }: PerfilContentProps) {
     if (tabFromUrl && tabFromUrl !== activeTab) {
       setActiveTab(tabFromUrl)
     }
-  }, [tabFromUrl])
+  }, [tabFromUrl, activeTab])
 
   const handleTabChange = (tab: "dados" | "favoritos" | "alertas") => {
     setActiveTab(tab)
@@ -102,51 +103,50 @@ function PerfilContent({ cidadao, favoritos, alertas }: PerfilContentProps) {
   return (
     <div className="min-h-screen flex flex-col bg-gray-50 font-sans">
       {/* Gradient Hero */}
-      <div className="bg-gradient-to-br from-blue-600 to-purple-700 text-white py-12 px-4">
+      <header className="bg-white border-b py-12 px-4" role="banner">
         <div className="container mx-auto max-w-5xl">
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div className="space-y-2">
-              <h1 className="text-4xl font-bold tracking-tight">Olá, {cidadao?.nome?.split(' ')[0] || 'Maria'}! 👋</h1>
-              <p className="text-blue-100 text-lg max-w-2xl">
+              <h1 className="text-4xl font-bold tracking-tight text-gray-900">Olá, {cidadao?.nome?.split(' ')[0] || 'Maria'}! 👋</h1>
+              <p className="text-gray-600 text-lg max-w-2xl">
                 Aqui você gerencia suas preferências e acompanha as leis que mais importam para você
               </p>
             </div>
-            <Link href="/">
-              <Button variant="ghost" className="text-white hover:bg-white/20 border-2 border-white/30 font-semibold backdrop-blur-sm">
+            <Link href="/" aria-label="Voltar para a página inicial">
+              <Button variant="outline" className="text-gray-700 hover:bg-gray-50 border-gray-200 font-semibold rounded-full focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                 ← Voltar ao Início
               </Button>
             </Link>
           </div>
         </div>
-      </div>
+      </header>
 
-      <main className="flex-1 container mx-auto px-4 py-8">
+      <main className="flex-1 container mx-auto px-4 py-8" role="main">
         <div className="max-w-5xl mx-auto space-y-6">
           {/* Featured: Train Simplinho Card */}
-          <Link href="/configuracoes" className="block animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <div className="bg-gradient-to-r from-purple-600 to-blue-600 rounded-3xl p-6 shadow-xl hover:shadow-2xl transition-all hover:scale-[1.02] cursor-pointer border border-purple-400/20">
+          <Link
+            href="/configuracoes"
+            className="block animate-in fade-in slide-in-from-bottom-4 duration-500 focus:outline-none focus:ring-4 focus:ring-blue-200 rounded-3xl"
+            aria-label="Personalizar preferências e treinar o Simplinho"
+          >
+            <div className="bg-white rounded-3xl p-6 shadow-lg hover:shadow-xl transition-all hover:scale-[1.01] cursor-pointer border border-blue-100 relative overflow-hidden">
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-purple-500"></div>
               <div className="flex items-center gap-6">
-                <div className="flex-shrink-0 relative">
-                  <div className="absolute inset-0 bg-white/20 rounded-full blur-xl"></div>
-                  <Image
-                    src="/simplinho.png"
-                    alt="Simplinho"
-                    width={90}
-                    height={90}
-                    className="rounded-full shadow-lg relative z-10 border-4 border-white"
-                  />
-                </div>
-                <div className="flex-1 text-white">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Sparkles className="h-6 w-6 fill-white" />
-                    <h2 className="text-2xl font-bold">Treine seu Simplinho</h2>
+                <div className="flex-shrink-0">
+                  <div className="h-20 w-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-md">
+                    <Sparkles className="h-10 w-10 text-white fill-white" aria-hidden="true" />
                   </div>
-                  <p className="text-blue-100 text-lg mb-3 leading-relaxed">
-                    Personalize os temas que você quer acompanhar e como quer ser avisado
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-2">
+                    <h2 className="text-2xl font-bold text-gray-900">Personalize suas preferências</h2>
+                  </div>
+                  <p className="text-gray-600 text-lg mb-3 leading-relaxed">
+                    Configure os temas que você quer acompanhar e como quer ser avisado ⚙️
                   </p>
-                  <div className="flex items-center gap-2 text-white font-bold">
+                  <div className="flex items-center gap-2 text-blue-600 font-bold">
                     <span>Configurar agora</span>
-                    <ArrowRight className="h-5 w-5" />
+                    <ArrowRight className="h-5 w-5" aria-hidden="true" />
                   </div>
                 </div>
               </div>
@@ -158,34 +158,36 @@ function PerfilContent({ cidadao, favoritos, alertas }: PerfilContentProps) {
             <div className="space-y-4 animate-in fade-in slide-in-from-left duration-700">
               <div className="bg-white p-6 rounded-3xl shadow-lg border border-gray-100 text-center">
                 <div className="w-24 h-24 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center mx-auto mb-4 shadow-inner">
-                  <User className="w-12 h-12 text-primary" />
+                  <User className="w-12 h-12 text-primary" aria-hidden="true" />
                 </div>
                 <h2 className="font-bold text-xl text-gray-900">{cidadao?.nome || "Maria da Silva"}</h2>
                 <p className="text-gray-500 text-sm mt-1">Membro desde Nov 2025</p>
               </div>
 
-              <nav className="bg-white p-3 rounded-3xl shadow-lg border border-gray-100 space-y-1">
+              <nav className="bg-white p-3 rounded-3xl shadow-lg border border-gray-100 space-y-1" aria-label="Menu do perfil">
                 <Button
                   variant="ghost"
                   onClick={() => handleTabChange("dados")}
                   className={cn(
-                    "w-full justify-start font-semibold rounded-xl transition-all",
-                    activeTab === "dados" ? "bg-gradient-to-r from-blue-50 to-purple-50 text-primary shadow-sm" : "text-gray-700 hover:text-primary hover:bg-gray-50"
+                    "w-full justify-start font-semibold rounded-xl transition-all focus:ring-2 focus:ring-blue-500 focus:ring-offset-2",
+                    activeTab === "dados" ? "bg-blue-50 text-blue-700 shadow-sm" : "text-gray-700 hover:text-blue-600 hover:bg-gray-50"
                   )}
+                  aria-current={activeTab === "dados" ? "page" : undefined}
                 >
-                  <User className="w-4 h-4 mr-3" /> Meus Dados
+                  <User className="w-4 h-4 mr-3" aria-hidden="true" /> Meus Dados
                 </Button>
                 <Button
                   variant="ghost"
                   onClick={() => handleTabChange("alertas")}
                   className={cn(
-                    "w-full justify-start font-semibold rounded-xl transition-all relative",
-                    activeTab === "alertas" ? "bg-gradient-to-r from-blue-50 to-purple-50 text-primary shadow-sm" : "text-gray-700 hover:text-primary hover:bg-gray-50"
+                    "w-full justify-start font-semibold rounded-xl transition-all relative focus:ring-2 focus:ring-blue-500 focus:ring-offset-2",
+                    activeTab === "alertas" ? "bg-blue-50 text-blue-700 shadow-sm" : "text-gray-700 hover:text-blue-600 hover:bg-gray-50"
                   )}
+                  aria-current={activeTab === "alertas" ? "page" : undefined}
                 >
-                  <Bell className="w-4 h-4 mr-3" /> Seus Alertas
+                  <Bell className="w-4 h-4 mr-3" aria-hidden="true" /> Seus Alertas
                   {unreadCount > 0 && (
-                    <Badge className="ml-auto bg-red-500 text-white text-xs px-2 py-0.5 shadow-md">
+                    <Badge className="ml-auto bg-red-500 text-white text-xs px-2 py-0.5 shadow-md" aria-label={`${unreadCount} alertas não lidos`}>
                       {unreadCount}
                     </Badge>
                   )}
@@ -194,24 +196,25 @@ function PerfilContent({ cidadao, favoritos, alertas }: PerfilContentProps) {
                   variant="ghost"
                   onClick={() => handleTabChange("favoritos")}
                   className={cn(
-                    "w-full justify-start font-semibold rounded-xl transition-all",
-                    activeTab === "favoritos" ? "bg-gradient-to-r from-blue-50 to-purple-50 text-primary shadow-sm" : "text-gray-700 hover:text-primary hover:bg-gray-50"
+                    "w-full justify-start font-semibold rounded-xl transition-all focus:ring-2 focus:ring-blue-500 focus:ring-offset-2",
+                    activeTab === "favoritos" ? "bg-blue-50 text-blue-700 shadow-sm" : "text-gray-700 hover:text-blue-600 hover:bg-gray-50"
                   )}
+                  aria-current={activeTab === "favoritos" ? "page" : undefined}
                 >
-                  <Star className="w-4 h-4 mr-3" /> Projetos Favoritos
+                  <Star className="w-4 h-4 mr-3" aria-hidden="true" /> Projetos Favoritos
                 </Button>
-                <Link href="/configuracoes" className="block">
-                  <Button variant="ghost" className="w-full justify-start font-semibold text-gray-700 hover:text-primary hover:bg-gray-50 rounded-xl transition-all">
-                    <Sparkles className="w-4 h-4 mr-3" /> Treinar Simplinho
+                <Link href="/configuracoes" className="block w-full">
+                  <Button variant="ghost" className="w-full justify-start font-semibold text-gray-700 hover:text-primary hover:bg-gray-50 rounded-xl transition-all focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                    <Sparkles className="w-4 h-4 mr-3" aria-hidden="true" /> Treinar Simplinho
                   </Button>
                 </Link>
                 <div className="pt-3 mt-3 border-t border-gray-200">
-                  <Link href="/login">
+                  <Link href="/login" className="block w-full">
                     <Button
                       variant="ghost"
-                      className="w-full justify-start font-semibold text-red-600 hover:text-red-700 hover:bg-red-50 rounded-xl transition-all"
+                      className="w-full justify-start font-semibold text-red-600 hover:text-red-700 hover:bg-red-50 rounded-xl transition-all focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
                     >
-                      <LogOut className="w-4 h-4 mr-3" /> Sair
+                      <LogOut className="w-4 h-4 mr-3" aria-hidden="true" /> Sair
                     </Button>
                   </Link>
                 </div>
@@ -219,14 +222,14 @@ function PerfilContent({ cidadao, favoritos, alertas }: PerfilContentProps) {
             </div>
 
             {/* Content */}
-            <div className="md:col-span-2 space-y-6 animate-in fade-in slide-in-from-right duration-700">
+            <div className="md:col-span-2 space-y-6 animate-in fade-in slide-in-from-right duration-700" role="region" aria-label="Conteúdo da aba selecionada">
               {activeTab === "dados" && (
                 <>
                   {/* Personal Data */}
                   <div className="bg-white p-6 rounded-3xl shadow-lg border border-gray-100">
                     <div className="flex items-center gap-3 mb-6">
                       <div className="bg-blue-100 rounded-full p-2.5 shadow-sm">
-                        <User className="w-5 h-5 text-blue-600" />
+                        <User className="w-5 h-5 text-blue-600" aria-hidden="true" />
                       </div>
                       <div>
                         <h3 className="text-xl font-bold text-gray-900">Seus Dados Pessoais</h3>
@@ -236,33 +239,33 @@ function PerfilContent({ cidadao, favoritos, alertas }: PerfilContentProps) {
                     <div className="space-y-5">
                       <div className="grid md:grid-cols-2 gap-4">
                         <div className="space-y-2">
-                          <Label className="text-gray-700 font-semibold">Como te chamamos</Label>
-                          <Input defaultValue={cidadao?.nome || "Maria da Silva"} className="h-12 border-gray-200 bg-gray-50 focus:bg-white transition-all focus:ring-2 focus:ring-blue-100 focus:border-blue-500 rounded-xl" />
+                          <Label htmlFor="nome" className="text-gray-700 font-semibold">Como te chamamos</Label>
+                          <Input id="nome" defaultValue={cidadao?.nome || "Maria da Silva"} className="h-12 border-gray-200 bg-gray-50 focus:bg-white transition-all focus:ring-2 focus:ring-blue-100 focus:border-blue-500 rounded-xl" />
                         </div>
                         <div className="space-y-2">
-                          <Label className="text-gray-700 font-semibold">Seu WhatsApp</Label>
-                          <Input defaultValue={cidadao?.contato || "(11) 99999-9999"} className="h-12 border-gray-200 bg-gray-50 focus:bg-white transition-all focus:ring-2 focus:ring-blue-100 focus:border-blue-500 rounded-xl" />
+                          <Label htmlFor="whatsapp" className="text-gray-700 font-semibold">Seu WhatsApp</Label>
+                          <Input id="whatsapp" defaultValue={cidadao?.contato || "(11) 99999-9999"} className="h-12 border-gray-200 bg-gray-50 focus:bg-white transition-all focus:ring-2 focus:ring-blue-100 focus:border-blue-500 rounded-xl" />
                           <p className="text-xs text-gray-500 ml-1">É aqui que você recebe os resumos diários 📱</p>
                         </div>
                       </div>
                       <div className="space-y-2">
-                        <Label className="text-gray-700 font-semibold">E-mail (opcional)</Label>
-                        <Input defaultValue="maria.silva@exemplo.com" className="h-12 border-gray-200 bg-gray-50 focus:bg-white transition-all focus:ring-2 focus:ring-blue-100 focus:border-blue-500 rounded-xl" />
+                        <Label htmlFor="email" className="text-gray-700 font-semibold">E-mail (opcional)</Label>
+                        <Input id="email" defaultValue="maria.silva@exemplo.com" className="h-12 border-gray-200 bg-gray-50 focus:bg-white transition-all focus:ring-2 focus:ring-blue-100 focus:border-blue-500 rounded-xl" />
                       </div>
                       <div className="space-y-2">
-                        <Label className="text-gray-700 font-semibold">Seu CEP</Label>
+                        <Label htmlFor="cep" className="text-gray-700 font-semibold">Seu CEP</Label>
                         <div className="relative">
-                          <MapPin className="absolute left-3 top-3.5 h-5 w-5 text-gray-400" />
-                          <Input className="h-12 pl-10 border-gray-200 bg-gray-50 focus:bg-white transition-all focus:ring-2 focus:ring-blue-100 focus:border-blue-500 rounded-xl" defaultValue="01001-000" />
+                          <MapPin className="absolute left-3 top-3.5 h-5 w-5 text-gray-400" aria-hidden="true" />
+                          <Input id="cep" className="h-12 pl-10 border-gray-200 bg-gray-50 focus:bg-white transition-all focus:ring-2 focus:ring-blue-100 focus:border-blue-500 rounded-xl" defaultValue="01001-000" />
                         </div>
                         <p className="text-xs text-gray-500 ml-1">Para te avisar sobre leis da sua região 📍</p>
                       </div>
                       <Button
                         onClick={handleSave}
                         disabled={isSaving}
-                        className="w-full md:w-auto h-12 font-bold shadow-lg bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl transition-all transform hover:-translate-y-0.5 active:translate-y-0"
+                        className="w-full md:w-auto h-12 font-bold shadow-md bg-blue-600 hover:bg-blue-700 text-white rounded-full transition-all hover:scale-105 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                       >
-                        <Save className="w-4 h-4 mr-2" />
+                        <Save className="w-4 h-4 mr-2" aria-hidden="true" />
                         {isSaving ? "Salvando..." : "Salvar Alterações"}
                       </Button>
                     </div>
@@ -272,7 +275,7 @@ function PerfilContent({ cidadao, favoritos, alertas }: PerfilContentProps) {
                   <div className="bg-white p-6 rounded-3xl shadow-lg border border-gray-100">
                     <div className="flex items-center gap-3 mb-6">
                       <div className="bg-green-100 rounded-full p-2.5 shadow-sm">
-                        <Bell className="w-5 h-5 text-green-600" />
+                        <Bell className="w-5 h-5 text-green-600" aria-hidden="true" />
                       </div>
                       <div>
                         <h3 className="text-xl font-bold text-gray-900">Preferências de Notificações</h3>
@@ -282,23 +285,23 @@ function PerfilContent({ cidadao, favoritos, alertas }: PerfilContentProps) {
                     <div className="space-y-4">
                       <div className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl border border-blue-100 hover:border-blue-200 transition-colors">
                         <div className="space-y-1">
-                          <Label className="text-base font-bold text-gray-900">Resumo Diário</Label>
+                          <Label htmlFor="switch-resumo" className="text-base font-bold text-gray-900">Resumo Diário</Label>
                           <p className="text-sm text-gray-600">Um resumo todo dia às 18h no WhatsApp 📬</p>
                         </div>
-                        <Switch defaultChecked className="data-[state=checked]:bg-blue-600" />
+                        <Switch id="switch-resumo" defaultChecked className="data-[state=checked]:bg-blue-600" />
                       </div>
                       <div className="flex items-center justify-between p-4 bg-gradient-to-r from-red-50 to-orange-50 rounded-xl border border-red-100 hover:border-red-200 transition-colors">
                         <div className="space-y-1">
-                          <Label className="text-base font-bold text-gray-900">Alertas Importantes</Label>
+                          <Label htmlFor="switch-urgente" className="text-base font-bold text-gray-900">Alertas Importantes</Label>
                           <p className="text-sm text-gray-600">Quando houver algo urgente sobre seus temas 🔔</p>
                         </div>
-                        <Switch defaultChecked className="data-[state=checked]:bg-red-600" />
+                        <Switch id="switch-urgente" defaultChecked className="data-[state=checked]:bg-red-600" />
                       </div>
                     </div>
                     <div className="mt-6 pt-6 border-t border-gray-200">
                       <Link href="/configuracoes">
-                        <Button variant="outline" className="w-full h-12 font-bold border-2 border-purple-200 text-purple-700 hover:bg-purple-50 hover:border-purple-300 rounded-xl transition-all">
-                          <Settings className="w-4 h-4 mr-2" />
+                        <Button variant="outline" className="w-full h-12 font-bold border-2 border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-300 rounded-full transition-all focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                          <Settings className="w-4 h-4 mr-2" aria-hidden="true" />
                           Ver todas as configurações
                         </Button>
                       </Link>
@@ -314,7 +317,7 @@ function PerfilContent({ cidadao, favoritos, alertas }: PerfilContentProps) {
                     <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
                       <div className="flex items-center gap-3">
                         <div className="bg-blue-100 rounded-full p-2.5 shadow-sm">
-                          <Bell className="w-5 h-5 text-blue-600" />
+                          <Bell className="w-5 h-5 text-blue-600" aria-hidden="true" />
                         </div>
                         <div>
                           <h3 className="text-xl font-bold text-gray-900">Seus Alertas</h3>
@@ -329,15 +332,16 @@ function PerfilContent({ cidadao, favoritos, alertas }: PerfilContentProps) {
                     </div>
 
                     {/* Filters */}
-                    <div className="flex gap-2 flex-wrap">
+                    <div className="flex gap-2 flex-wrap" role="toolbar" aria-label="Filtros de alertas">
                       <Button
                         size="sm"
                         variant={alertFilter === "todos" ? "default" : "outline"}
                         onClick={() => setAlertFilter("todos")}
                         className={cn(
-                          "font-bold rounded-xl",
-                          alertFilter === "todos" ? "shadow-md" : "border-gray-300 text-gray-700 hover:bg-gray-50"
+                          "font-bold rounded-full focus:ring-2 focus:ring-blue-500 focus:ring-offset-2",
+                          alertFilter === "todos" ? "bg-blue-600 hover:bg-blue-700 shadow-md" : "border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-blue-300"
                         )}
+                        aria-pressed={alertFilter === "todos"}
                       >
                         Todos ({localAlertas.length})
                       </Button>
@@ -346,9 +350,10 @@ function PerfilContent({ cidadao, favoritos, alertas }: PerfilContentProps) {
                         variant={alertFilter === "nao-lidos" ? "default" : "outline"}
                         onClick={() => setAlertFilter("nao-lidos")}
                         className={cn(
-                          "font-bold rounded-xl",
-                          alertFilter === "nao-lidos" ? "shadow-md" : "border-gray-300 text-gray-700 hover:bg-gray-50"
+                          "font-bold rounded-full focus:ring-2 focus:ring-blue-500 focus:ring-offset-2",
+                          alertFilter === "nao-lidos" ? "bg-blue-600 hover:bg-blue-700 shadow-md" : "border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-blue-300"
                         )}
+                        aria-pressed={alertFilter === "nao-lidos"}
                       >
                         Não lidos ({unreadCount})
                       </Button>
@@ -357,9 +362,10 @@ function PerfilContent({ cidadao, favoritos, alertas }: PerfilContentProps) {
                         variant={alertFilter === "urgentes" ? "default" : "outline"}
                         onClick={() => setAlertFilter("urgentes")}
                         className={cn(
-                          "font-bold rounded-xl",
-                          alertFilter === "urgentes" ? "bg-red-600 hover:bg-red-700 shadow-md" : "border-gray-300 text-gray-700 hover:bg-gray-50"
+                          "font-bold rounded-full focus:ring-2 focus:ring-blue-500 focus:ring-offset-2",
+                          alertFilter === "urgentes" ? "bg-red-600 hover:bg-red-700 shadow-md" : "border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-red-300"
                         )}
+                        aria-pressed={alertFilter === "urgentes"}
                       >
                         Urgentes ({localAlertas.filter((a) => a.type === "urgente").length})
                       </Button>
@@ -370,24 +376,30 @@ function PerfilContent({ cidadao, favoritos, alertas }: PerfilContentProps) {
                   {filteredAlerts.length > 0 ? (
                     <div className="space-y-3">
                       {filteredAlerts.map((alert) => (
-                        <Card
+                        <article
                           key={alert.id}
                           className={cn(
-                            "hover:shadow-lg transition-all border-l-4 rounded-2xl",
-                            alert.type === "urgente" ? "border-l-red-500 bg-red-50/50" : "border-l-blue-500",
-                            !alert.read && "bg-blue-50/30 shadow-md"
+                            "hover:shadow-lg transition-all border border-gray-100 rounded-2xl bg-white relative overflow-hidden",
+                            alert.type === "urgente" && "border-red-100",
+                            !alert.read && "shadow-md"
                           )}
                         >
                           <CardContent className="p-5">
+                            {alert.type === "urgente" && (
+                              <div className="absolute top-0 left-0 w-1 h-full bg-red-500"></div>
+                            )}
+                            {!alert.read && alert.type !== "urgente" && (
+                              <div className="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
+                            )}
                             <div className="flex items-start gap-4">
                               <div className={cn(
                                 "rounded-full p-2.5 flex-shrink-0 shadow-sm",
                                 alert.type === "urgente" ? "bg-red-100" : "bg-blue-100"
                               )}>
                                 {alert.type === "urgente" ? (
-                                  <AlertCircle className="w-5 h-5 text-red-600" />
+                                  <AlertCircle className="w-5 h-5 text-red-600" aria-hidden="true" />
                                 ) : (
-                                  <Bell className="w-5 h-5 text-blue-600" />
+                                  <Bell className="w-5 h-5 text-blue-600" aria-hidden="true" />
                                 )}
                               </div>
                               <div className="flex-1 space-y-2">
@@ -396,7 +408,7 @@ function PerfilContent({ cidadao, favoritos, alertas }: PerfilContentProps) {
                                     <div className="flex items-center gap-2 mb-1">
                                       <h4 className="font-bold text-gray-900">{alert.title}</h4>
                                       {!alert.read && (
-                                        <div className="w-2 h-2 bg-blue-600 rounded-full animate-pulse"></div>
+                                        <div className="w-2 h-2 bg-blue-600 rounded-full animate-pulse" aria-label="Não lido"></div>
                                       )}
                                     </div>
                                     <p className="text-sm text-gray-700 leading-relaxed">{alert.message}</p>
@@ -413,7 +425,7 @@ function PerfilContent({ cidadao, favoritos, alertas }: PerfilContentProps) {
                                     <Button
                                       size="sm"
                                       variant="ghost"
-                                      className="text-xs text-blue-600 hover:text-blue-700 hover:bg-blue-50 font-semibold rounded-lg"
+                                      className="text-xs text-blue-600 hover:text-blue-700 hover:bg-blue-50 font-semibold rounded-full focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                                       onClick={() => handleMarkAsRead(alert.id)}
                                     >
                                       Marcar como lido
@@ -423,13 +435,13 @@ function PerfilContent({ cidadao, favoritos, alertas }: PerfilContentProps) {
                               </div>
                             </div>
                           </CardContent>
-                        </Card>
+                        </article>
                       ))}
                     </div>
                   ) : (
                     <div className="bg-white p-12 rounded-3xl shadow-lg border border-gray-100 text-center">
                       <div className="bg-gradient-to-br from-green-100 to-emerald-100 h-24 w-24 rounded-full flex items-center justify-center mx-auto mb-4 shadow-inner">
-                        <CheckCircle className="h-12 w-12 text-green-600" />
+                        <CheckCircle className="h-12 w-12 text-green-600" aria-hidden="true" />
                       </div>
                       <h3 className="text-xl font-bold text-gray-900 mb-2">Tudo em dia! 🎉</h3>
                       <p className="text-gray-600 text-lg">
@@ -448,7 +460,7 @@ function PerfilContent({ cidadao, favoritos, alertas }: PerfilContentProps) {
                   <div className="bg-white p-6 rounded-3xl shadow-lg border border-gray-100">
                     <div className="flex items-center gap-3">
                       <div className="bg-yellow-100 rounded-full p-2.5 shadow-sm">
-                        <Star className="w-5 h-5 text-yellow-600 fill-yellow-600" />
+                        <Star className="w-5 h-5 text-yellow-600 fill-yellow-600" aria-hidden="true" />
                       </div>
                       <div>
                         <h3 className="text-xl font-bold text-gray-900">Seus Projetos Favoritos</h3>
@@ -461,48 +473,48 @@ function PerfilContent({ cidadao, favoritos, alertas }: PerfilContentProps) {
                   {localFavoritos.length > 0 ? (
                     <div className="grid gap-4">
                       {localFavoritos.map((project) => (
-                        <Card key={project.id} className="hover:shadow-xl transition-all border-gray-100 rounded-2xl">
+                        <article key={project.id} className="hover:shadow-xl transition-all border-gray-100 rounded-2xl bg-white border shadow-sm">
                           <CardContent className="p-6">
                             <div className="flex items-start justify-between gap-4">
                               <div className="flex-1 space-y-3">
                                 <div className="flex items-start gap-3">
-                                  <Badge className={`bg-blue-100 text-blue-700 border-0 font-bold shadow-sm`}>{project.tipo}</Badge>
-                                  <Star className="w-5 h-5 text-yellow-500 fill-yellow-500 flex-shrink-0" />
+                                  <Badge className="bg-blue-50 text-blue-700 border border-blue-100 font-bold shadow-sm">{project.tipo}</Badge>
+                                  <Star className="w-5 h-5 text-yellow-500 fill-yellow-500 flex-shrink-0" aria-hidden="true" />
                                 </div>
                                 <h3 className="font-bold text-lg text-gray-900">{project.ementa}</h3>
                                 <p className="text-gray-600 text-sm leading-relaxed line-clamp-2">{project.traducao?.resumo || project.ementa}</p>
                                 <p className="text-xs text-gray-500 font-medium">{project.data_apresentacao}</p>
                                 <div className="flex gap-3 pt-2 flex-wrap">
                                   <Link href={`/projetos-de-lei/${project.id}`}>
-                                    <Button size="sm" className="font-bold shadow-md hover:shadow-lg transition-all rounded-xl">
-                                      Ver Detalhes <ArrowRight className="w-4 h-4 ml-1" />
+                                    <Button size="sm" className="font-bold shadow-md hover:shadow-lg transition-all rounded-full bg-blue-600 hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                                      Ver Detalhes <ArrowRight className="w-4 h-4 ml-1" aria-hidden="true" />
                                     </Button>
                                   </Link>
                                   <Button
                                     size="sm"
                                     variant="outline"
-                                    className="text-red-600 hover:bg-red-50 border-red-200 font-bold rounded-xl"
+                                    className="text-red-600 hover:bg-red-50 border-red-200 font-bold rounded-full focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
                                     onClick={() => handleRemoveFavorito(project.id)}
                                   >
-                                    <Trash2 className="w-4 h-4 mr-1" /> Remover
+                                    <Trash2 className="w-4 h-4 mr-1" aria-hidden="true" /> Remover
                                   </Button>
                                 </div>
                               </div>
                             </div>
                           </CardContent>
-                        </Card>
+                        </article>
                       ))}
                     </div>
                   ) : (
                     <div className="bg-white p-12 rounded-3xl shadow-lg border border-gray-100 text-center">
                       <div className="bg-gradient-to-br from-yellow-100 to-amber-100 h-24 w-24 rounded-full flex items-center justify-center mx-auto mb-4 shadow-inner">
-                        <Star className="h-12 w-12 text-yellow-600" />
+                        <Star className="h-12 w-12 text-yellow-600" aria-hidden="true" />
                       </div>
                       <h3 className="text-xl font-bold text-gray-900 mb-2">Você ainda não tem favoritos</h3>
                       <p className="text-gray-600 mb-6 text-lg">Explore os projetos de lei e clique na estrela para salvar ⭐</p>
                       <Link href="/projetos-de-lei">
-                        <Button className="font-bold shadow-lg hover:shadow-xl transition-all rounded-xl h-12">
-                          Explorar Projetos <ArrowRight className="w-4 h-4 ml-2" />
+                        <Button className="font-bold shadow-md hover:shadow-lg transition-all rounded-full h-12 bg-blue-600 hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                          Explorar Projetos <ArrowRight className="w-4 h-4 ml-2" aria-hidden="true" />
                         </Button>
                       </Link>
                     </div>
@@ -516,6 +528,7 @@ function PerfilContent({ cidadao, favoritos, alertas }: PerfilContentProps) {
     </div>
   )
 }
+
 export default async function PerfilPage() {
   let cidadao: Cidadao | undefined
   let favoritos: Lei[] = []
@@ -533,8 +546,10 @@ export default async function PerfilPage() {
   }
 
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div></div>}>
-      <PerfilContent cidadao={cidadao} favoritos={favoritos} alertas={alertas} />
-    </Suspense>
+    <ProtectedRoute>
+      <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary" role="status" aria-label="Carregando"></div></div>}>
+        <PerfilContent cidadao={cidadao} favoritos={favoritos} alertas={alertas} />
+      </Suspense>
+    </ProtectedRoute>
   )
 }

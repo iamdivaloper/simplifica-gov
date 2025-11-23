@@ -10,14 +10,14 @@ export default function DailySummary() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 font-sans flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gray-50 font-sans flex items-center justify-center p-4" role="alert">
         <div className="text-center max-w-md mx-auto bg-white p-8 rounded-2xl shadow-lg border border-red-100">
           <div className="bg-red-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
-            <AlertCircle className="h-8 w-8 text-red-500" />
+            <AlertCircle className="h-8 w-8 text-red-500" aria-hidden="true" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-3">Ops, algo deu errado! 😕</h2>
+          <h1 className="text-2xl font-bold text-gray-900 mb-3">Ops, algo deu errado! 😕</h1>
           <p className="text-gray-600 mb-6">
-            Não conseguimos carregar seu resumo diário agora. Pode ser uma instabilidade passageira.
+            Não conseguimos carregar suas atualizações agora. Pode ser uma instabilidade passageira.
           </p>
           <Button className="w-full font-bold shadow-md hover:shadow-lg transition-all" onClick={() => window.location.reload()}>
             Tentar Novamente
@@ -29,19 +29,19 @@ export default function DailySummary() {
 
   return (
     <div className="min-h-screen bg-gray-50 font-sans">
-      <main className="pb-20">
+      <main className="pb-20" role="main">
         {/* Hero Section */}
-        <section className="bg-gradient-to-br from-blue-600 to-purple-700 text-white py-16">
+        <section className="bg-white border-b py-16" aria-labelledby="hero-heading">
           <div className="container mx-auto px-4">
-            <div className="flex items-center gap-2 text-blue-100 text-sm font-medium mb-4 bg-white/10 inline-flex px-3 py-1 rounded-full backdrop-blur-sm">
-              <Calendar className="h-4 w-4" />
-              <span>Quinta-feira, 21 de Novembro de 2025</span>
+            <div className="flex items-center gap-2 text-blue-600 text-sm font-medium mb-4 bg-blue-50 inline-flex px-3 py-1 rounded-full border border-blue-100">
+              <Calendar className="h-4 w-4" aria-hidden="true" />
+              <time dateTime="2025-11-21">Quinta-feira, 21 de Novembro de 2025</time>
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold mb-4 tracking-tight">
-              Seu Resumo Diário
+            <h1 id="hero-heading" className="text-4xl md:text-5xl font-bold mb-4 tracking-tight text-gray-900">
+              Suas Atualizações Legislativas
             </h1>
-            <p className="text-xl text-blue-100 max-w-2xl leading-relaxed">
-              Olá! 👋 Preparamos os destaques mais importantes sobre os projetos que impactam sua vida hoje.
+            <p className="text-xl text-gray-600 max-w-2xl leading-relaxed">
+              Olá! Preparamos os destaques mais importantes sobre os projetos que impactam sua vida. Você recebe atualizações sempre que houver novidades relevantes.
             </p>
           </div>
         </section>
@@ -51,47 +51,48 @@ export default function DailySummary() {
             {/* Main Content Column */}
             <div className="lg:col-span-2 space-y-8">
               {/* Audio Summary Card */}
-              <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-100 shadow-sm overflow-hidden">
-                <CardContent className="p-6 flex flex-col sm:flex-row items-center gap-6 relative">
-                  <div className="absolute top-0 right-0 p-4 opacity-10">
-                    <Sparkles className="h-24 w-24 text-blue-600" />
-                  </div>
-                  <div className="h-16 w-16 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg ring-4 ring-blue-100 cursor-pointer hover:scale-105 transition-transform group">
-                    <PlayCircle className="h-8 w-8 text-white group-hover:scale-110 transition-transform" />
-                  </div>
-                  <div className="space-y-2 flex-grow text-center sm:text-left z-10">
-                    <h3 className="font-bold text-xl text-gray-900">Resumo em Áudio (2min)</h3>
-                    <p className="text-gray-600">
-                      A IA do SimplificaGov narra as principais mudanças de hoje para você ouvir no caminho.
-                    </p>
-                  </div>
-                  <Button className="w-full sm:w-auto rounded-full shadow-md font-semibold z-10">
-                    Ouvir Agora
-                  </Button>
-                </CardContent>
-              </Card>
+              <section aria-labelledby="audio-summary-heading">
+                <Card className="bg-white border border-blue-100 shadow-lg overflow-hidden hover:shadow-xl transition-all">
+                  <CardContent className="p-6 flex flex-col sm:flex-row items-center gap-6 relative">
+                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-blue-400"></div>
+                    <div className="h-16 w-16 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0 shadow-md ring-2 ring-blue-50 cursor-pointer hover:scale-105 transition-transform group">
+                      <PlayCircle className="h-8 w-8 text-white group-hover:scale-110 transition-transform" aria-hidden="true" />
+                    </div>
+                    <div className="space-y-2 flex-grow text-center sm:text-left">
+                      <h2 id="audio-summary-heading" className="font-bold text-xl text-gray-900">Resumo em Áudio (2min)</h2>
+                      <p className="text-gray-600">
+                        O Simplinho narra as principais mudanças de hoje para você ouvir no caminho. 🎧
+                      </p>
+                    </div>
+                    <Button className="w-full sm:w-auto rounded-full shadow-md font-semibold bg-blue-600 hover:bg-blue-700 text-white" aria-label="Ouvir resumo em áudio">
+                      Ouvir Agora
+                    </Button>
+                  </CardContent>
+                </Card>
+              </section>
 
               {/* Timeline Updates */}
-              <div className="space-y-6">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="bg-orange-100 p-2 rounded-lg">
-                    <Clock className="h-6 w-6 text-orange-600" />
+              <section aria-labelledby="timeline-heading" className="space-y-6">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="bg-blue-50 p-2 rounded-lg border border-blue-100">
+                    <Clock className="h-6 w-6 text-blue-600" aria-hidden="true" />
                   </div>
-                  <h2 className="font-bold text-2xl text-gray-900">
-                    Últimas Atualizações
+                  <h2 id="timeline-heading" className="font-bold text-2xl text-gray-900">
+                    O que aconteceu hoje?
                   </h2>
                 </div>
 
                 {/* Update Item 1 */}
-                <Card className="border-l-4 border-l-green-500 hover:shadow-xl transition-all duration-300 group border-t border-r border-b border-gray-100">
-                  <CardContent className="p-6">
+                <article className="bg-white border border-gray-100 rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 group relative overflow-hidden">
+                  <div className="absolute top-0 left-0 w-1 h-full bg-green-500"></div>
+                  <div className="p-6">
                     <div className="flex justify-between items-start mb-4">
-                      <Badge className="bg-green-100 text-green-700 hover:bg-green-200 border-none px-3 py-1 text-sm font-semibold">
+                      <Badge className="bg-green-50 text-green-700 border border-green-100 px-3 py-1 text-sm font-semibold">
                         ✅ Aprovado
                       </Badge>
                       <span className="text-sm text-gray-400 font-medium">Há 2 horas</span>
                     </div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-primary transition-colors">
+                    <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors">
                       Novo Auxílio Transporte Aprovado
                     </h3>
                     <p className="text-gray-600 mb-6 leading-relaxed">
@@ -100,26 +101,27 @@ export default function DailySummary() {
                       A medida agora segue para sanção presidencial.
                     </p>
                     <div className="flex gap-3">
-                      <Button variant="outline" size="sm" className="font-semibold text-primary border-primary/20 hover:bg-blue-50">
+                      <Button variant="outline" size="sm" className="font-semibold text-blue-600 border-blue-200 hover:bg-blue-50 hover:border-blue-300">
                         Ler detalhes completos
                       </Button>
-                      <Button variant="ghost" size="icon" className="text-gray-400 hover:text-primary hover:bg-blue-50 rounded-full">
-                        <Share2 className="h-5 w-5" />
+                      <Button variant="ghost" size="icon" className="text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-full" aria-label="Compartilhar notícia sobre Auxílio Transporte">
+                        <Share2 className="h-5 w-5" aria-hidden="true" />
                       </Button>
                     </div>
-                  </CardContent>
-                </Card>
+                  </div>
+                </article>
 
                 {/* Update Item 2 */}
-                <Card className="border-l-4 border-l-blue-500 hover:shadow-xl transition-all duration-300 group border-t border-r border-b border-gray-100">
-                  <CardContent className="p-6">
+                <article className="bg-white border border-gray-100 rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 group relative overflow-hidden">
+                  <div className="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
+                  <div className="p-6">
                     <div className="flex justify-between items-start mb-4">
-                      <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-200 border-none px-3 py-1 text-sm font-semibold">
+                      <Badge className="bg-blue-50 text-blue-700 border border-blue-100 px-3 py-1 text-sm font-semibold">
                         💬 Em Discussão
                       </Badge>
                       <span className="text-sm text-gray-400 font-medium">Há 5 horas</span>
                     </div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-primary transition-colors">
+                    <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors">
                       PL das Redes Sociais (PL 2630)
                     </h3>
                     <p className="text-gray-600 mb-6 leading-relaxed">
@@ -127,44 +129,46 @@ export default function DailySummary() {
                       O foco hoje foi em como combater fake news sem prejudicar a liberdade de expressão.
                     </p>
                     <div className="flex gap-3">
-                      <Button variant="outline" size="sm" className="font-semibold text-primary border-primary/20 hover:bg-blue-50">
+                      <Button variant="outline" size="sm" className="font-semibold text-blue-600 border-blue-200 hover:bg-blue-50 hover:border-blue-300">
                         Ler detalhes completos
                       </Button>
-                      <Button variant="ghost" size="icon" className="text-gray-400 hover:text-primary hover:bg-blue-50 rounded-full">
-                        <Share2 className="h-5 w-5" />
+                      <Button variant="ghost" size="icon" className="text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-full" aria-label="Compartilhar notícia sobre PL das Redes Sociais">
+                        <Share2 className="h-5 w-5" aria-hidden="true" />
                       </Button>
                     </div>
-                  </CardContent>
-                </Card>
-              </div>
+                  </div>
+                </article>
+              </section>
             </div>
 
             {/* Sidebar */}
-            <div className="space-y-8">
+            <aside className="space-y-8">
               <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-lg sticky top-8">
                 <h3 className="font-bold text-xl mb-6 flex items-center gap-2 text-gray-900">
-                  <CheckCircle2 className="h-6 w-6 text-green-500" />
-                  Sua Ação Cidadã
+                  <CheckCircle2 className="h-6 w-6 text-green-500" aria-hidden="true" />
+                  Sua Voz Importa
                 </h3>
                 <div className="space-y-6">
                   <p className="text-gray-600 leading-relaxed">
-                    Você já participou de <strong className="text-primary">2 enquetes</strong> esta semana!
-                    Sua opinião ajuda a pressionar os parlamentares.
+                    Você já participou de <strong className="text-blue-600">2 enquetes</strong> esta semana!
+                    Sua opinião ajuda a pressionar os parlamentares. 💪
                   </p>
-                  <div className="p-5 bg-gray-50 rounded-xl border border-gray-200">
+                  <div className="p-5 bg-blue-50 rounded-xl border border-blue-100" role="group" aria-label="Enquete: Você apoia a redução da maioridade penal para crimes hediondos?">
                     <p className="font-bold text-gray-900 mb-4">
                       Você apoia a redução da maioridade penal para crimes hediondos?
                     </p>
                     <div className="grid grid-cols-2 gap-3">
                       <Button
                         variant="outline"
-                        className="w-full hover:bg-green-50 hover:text-green-700 hover:border-green-300 bg-white font-semibold transition-all"
+                        className="w-full hover:bg-green-50 hover:text-green-700 hover:border-green-300 bg-white font-semibold transition-all border-gray-200"
+                        aria-label="Votar Sim"
                       >
                         👍 Sim
                       </Button>
                       <Button
                         variant="outline"
-                        className="w-full hover:bg-red-50 hover:text-red-700 hover:border-red-300 bg-white font-semibold transition-all"
+                        className="w-full hover:bg-red-50 hover:text-red-700 hover:border-red-300 bg-white font-semibold transition-all border-gray-200"
+                        aria-label="Votar Não"
                       >
                         👎 Não
                       </Button>
@@ -173,19 +177,17 @@ export default function DailySummary() {
                 </div>
               </div>
 
-              <div className="bg-gradient-to-br from-primary to-blue-800 p-8 rounded-2xl text-white shadow-xl relative overflow-hidden">
-                <div className="absolute top-0 right-0 p-4 opacity-10">
-                  <Share2 className="h-32 w-32 text-white" />
-                </div>
-                <h3 className="font-bold text-xl mb-3 relative z-10">Receba no WhatsApp</h3>
-                <p className="text-blue-100 mb-6 leading-relaxed relative z-10">
-                  Não quer entrar no site todo dia? Receba esse resumo mastigadinho direto no seu Zap!
+              <div className="bg-white p-8 rounded-2xl border border-blue-100 shadow-lg relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-blue-400"></div>
+                <h3 className="font-bold text-xl mb-3 text-gray-900">Receba no WhatsApp</h3>
+                <p className="text-gray-600 mb-6 leading-relaxed">
+                  Não quer entrar no site todo dia? Receba esse resumo mastigadinho direto no seu Zap! 📱
                 </p>
-                <Button className="w-full bg-white text-primary hover:bg-blue-50 border-none font-bold shadow-lg relative z-10">
+                <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold shadow-md rounded-full transition-all hover:scale-105">
                   Ativar Notificações
                 </Button>
               </div>
-            </div>
+            </aside>
           </div>
         </div>
       </main>

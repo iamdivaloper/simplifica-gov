@@ -98,6 +98,134 @@
   --chart-5: 27 87% 67%;
 }
 
+/* Minimalist Theme */
+.minimalist {
+  --background: #ffffff;
+  --foreground: #000000;
+  --card: #ffffff;
+  --card-foreground: #000000;
+  --popover: #ffffff;
+  --popover-foreground: #000000;
+  --primary: #4b5563;
+  /* Gray-600 */
+  --primary-foreground: #ffffff;
+  --secondary: #e5e7eb;
+  /* Gray-200 */
+  --secondary-foreground: #000000;
+  --muted: #f3f4f6;
+  --muted-foreground: #4b5563;
+  --accent: #f9fafb;
+  --accent-foreground: #000000;
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
+  --border: #000000;
+  /* High visibility borders */
+  --input: #ffffff;
+  --ring: #000000;
+  --radius: 0;
+  /* No rounded corners */
+}
+
+/* Minimalist Overrides */
+.minimalist * {
+  box-shadow: none !important;
+  background-image: none !important;
+  /* Remove gradients */
+  transition: none !important;
+  /* Remove animations */
+  animation: none !important;
+}
+
+.minimalist .rounded-full,
+.minimalist .rounded-xl,
+.minimalist .rounded-lg,
+.minimalist .rounded-md,
+.minimalist .rounded-2xl,
+.minimalist .rounded-3xl {
+  border-radius: 0 !important;
+}
+
+.minimalist button,
+.minimalist a.button {
+  border: 1px solid #000 !important;
+  text-transform: uppercase;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+}
+
+/* High Contrast Theme */
+.high-contrast {
+  --background: #000000;
+  --foreground: #ffff00;
+  /* Yellow text */
+  --card: #000000;
+  --card-foreground: #ffff00;
+  --popover: #000000;
+  --popover-foreground: #ffff00;
+  --primary: #ffff00;
+  --primary-foreground: #000000;
+  --secondary: #ffffff;
+  --secondary-foreground: #000000;
+  --muted: #ffffff;
+  --muted-foreground: #000000;
+  --accent: #ffff00;
+  --accent-foreground: #000000;
+  --destructive: #ff0000;
+  --destructive-foreground: #ffffff;
+  --border: #ffff00;
+  --input: #000000;
+  --ring: #ffff00;
+  --radius: 0;
+}
+
+/* High Contrast Specific Overrides */
+.high-contrast * {
+  border-color: #ffff00 !important;
+}
+
+.high-contrast img {
+  filter: grayscale(100%) contrast(120%);
+}
+
+.high-contrast a {
+  text-decoration: underline !important;
+  font-weight: bold !important;
+  color: #ffff00 !important;
+}
+
+.high-contrast button,
+.high-contrast .button {
+  background-color: #ffff00 !important;
+  color: #000000 !important;
+  border: 2px solid #ffffff !important;
+  font-weight: 900 !important;
+}
+
+.high-contrast .bg-white,
+.high-contrast .bg-gray-50,
+.high-contrast .bg-gray-100,
+.high-contrast .bg-blue-50,
+.high-contrast .bg-blue-600,
+.high-contrast .bg-muted\/30 {
+  background-color: #000000 !important;
+  color: #ffff00 !important;
+}
+
+.high-contrast .text-gray-500,
+.high-contrast .text-gray-600,
+.high-contrast .text-gray-700,
+.high-contrast .text-gray-900,
+.high-contrast .text-muted-foreground,
+.high-contrast .text-blue-600,
+.high-contrast .text-primary {
+  color: #ffff00 !important;
+}
+
+.high-contrast svg {
+  color: #ffff00 !important;
+  fill: #ffff00 !important;
+}
+
 /* Smooth scroll behavior */
 html {
   scroll-behavior: smooth;

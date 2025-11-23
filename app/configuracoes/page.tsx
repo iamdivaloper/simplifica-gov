@@ -3,13 +3,12 @@
 import { useState, useEffect } from "react"
 import { api } from "@/lib/api"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
 import { Switch } from "@/components/ui/switch"
-import { Label } from "@/components/ui/label"
-import { Sparkles, Check, Heart, Bell, Zap, ArrowLeft } from "lucide-react"
+import { Sparkles, Check, Heart, Bell, Zap, ArrowLeft, Mail, MessageCircle } from "lucide-react"
 import Link from "next/link"
-import Image from "next/image"
 import { cn } from "@/lib/utils"
+import { ProtectedRoute } from "@/components/protected-route"
+import { Label } from "@/components/ui/label"
 
 const INTERESTS = [
     "Salário e Benefícios Trabalhistas",
@@ -54,6 +53,8 @@ export default function ConfiguracoesPage() {
     const [initialInterests, setInitialInterests] = useState<string[]>([])
     const [isLoading, setIsLoading] = useState(true)
     const [isSaving, setIsSaving] = useState(false)
+    const [whatsappEnabled, setWhatsappEnabled] = useState(false)
+    const [emailEnabled, setEmailEnabled] = useState(false)
 
     useEffect(() => {
         const loadPreferences = async () => {
@@ -103,161 +104,175 @@ export default function ConfiguracoesPage() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 font-sans">
-            {/* Gradient Hero */}
-            <div className="bg-gradient-to-br from-purple-600 to-blue-700 text-white py-12 px-4">
-                <div className="container mx-auto max-w-4xl">
-                    <div className="flex items-center justify-between flex-wrap gap-4">
-                        <div className="space-y-2">
-                            <div className="flex items-center gap-3">
-                                <Sparkles className="h-8 w-8 fill-white" />
-                                <h1 className="text-4xl font-bold tracking-tight">Treine seu Simplinho</h1>
-                            </div>
-                            <p className="text-blue-100 text-lg max-w-2xl">
-                                Personalize o que você quer acompanhar. Quanto mais específico, melhores serão os alertas! ⭐
-                            </p>
-                        </div>
-                        <Link href="/perfil">
-                            <Button variant="ghost" className="text-white hover:bg-white/20 border-2 border-white/30 font-semibold backdrop-blur-sm">
-                                <ArrowLeft className="w-4 h-4 mr-2" /> Voltar ao Perfil
-                            </Button>
-                        </Link>
-                    </div>
-                </div>
-            </div>
-
-            <div className="container mx-auto px-4 py-8 max-w-4xl">
-                <div className="space-y-6">
-                    {/* Simplinho Avatar Card */}
-                    <div className="bg-white rounded-3xl shadow-lg p-6 border border-gray-100 text-center animate-in fade-in slide-in-from-bottom-4 duration-500">
-                        <div className="flex justify-center mb-4 relative">
-                            <div className="absolute inset-0 bg-purple-200 rounded-full blur-2xl opacity-30 animate-pulse"></div>
-                            <Image
-                                src="/simplinho.png"
-                                alt="Simplinho"
-                                width={100}
-                                height={100}
-                                className="rounded-full shadow-xl relative z-10 border-4 border-white"
-                            />
-                        </div>
-                        <p className="text-gray-600 text-lg leading-relaxed max-w-2xl mx-auto">
-                            Olá! Sou o Simplinho e estou aqui para te manter informado sobre as leis que realmente importam para você.
-                            Me conte seus interesses! 💜
-                        </p>
-                    </div>
-
-                    {/* Main Content */}
-                    <div className="bg-white rounded-3xl shadow-lg p-8 border border-gray-100 space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-100">
-                        {/* Interests Section */}
-                        <div className="space-y-6">
-                            <div className="flex items-start gap-4">
-                                <div className="bg-purple-100 rounded-full p-3 shadow-sm">
-                                    <Heart className="h-6 w-6 text-purple-600" />
+        <ProtectedRoute>
+            <div className="min-h-screen bg-gray-50 font-sans">
+                {/* Gradient Hero */}
+                <header className="bg-white border-b py-12 px-4" role="banner">
+                    <div className="container mx-auto max-w-4xl">
+                        <div className="flex items-center justify-between flex-wrap gap-4">
+                            <div className="space-y-2">
+                                <div className="flex items-center gap-3">
+                                    <Sparkles className="h-8 w-8 text-blue-600" aria-hidden="true" />
+                                    <h1 className="text-4xl font-bold tracking-tight text-gray-900">Personalize suas preferências</h1>
                                 </div>
-                                <div className="flex-1">
-                                    <h2 className="text-2xl font-bold text-gray-900 mb-2">Sobre o que você quer saber?</h2>
-                                    <p className="text-gray-600 text-lg leading-relaxed">
-                                        Escolha os temas que mais importam para você. Vou te avisar sempre que houver novidades! 🔔
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div className="flex flex-wrap gap-2">
-                                {INTERESTS.map((interest) => (
-                                    <Badge
-                                        key={interest}
-                                        variant={selectedInterests.includes(interest) ? "default" : "outline"}
-                                        className={cn(
-                                            "cursor-pointer text-sm py-2.5 px-4 transition-all hover:scale-105 rounded-xl font-semibold shadow-sm",
-                                            selectedInterests.includes(interest)
-                                                ? "bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white border-purple-600 shadow-md"
-                                                : "bg-white text-gray-700 border-gray-300 hover:border-purple-500 hover:text-purple-700 hover:bg-purple-50"
-                                        )}
-                                        onClick={() => toggleInterest(interest)}
-                                    >
-                                        {selectedInterests.includes(interest) && <Check className="h-4 w-4 mr-1.5" />}
-                                        {interest}
-                                    </Badge>
-                                ))}
-                            </div>
-
-                            {selectedInterests.length > 0 && (
-                                <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-2xl p-5 border border-purple-200 shadow-sm animate-in fade-in slide-in-from-top-2">
-                                    <p className="text-sm font-bold text-purple-900 flex items-center gap-2">
-                                        <Sparkles className="h-5 w-5 text-purple-600 fill-purple-600" />
-                                        Ótimo! Você está acompanhando {selectedInterests.length}{" "}
-                                        {selectedInterests.length === 1 ? "tema" : "temas"}. Vou te manter atualizado! 📬
-                                    </p>
-                                </div>
-                            )}
-                        </div>
-
-                        {/* Notification Preferences */}
-                        <div className="space-y-6 pt-6 border-t border-gray-200">
-                            <div className="flex items-start gap-4">
-                                <div className="bg-blue-100 rounded-full p-3 shadow-sm">
-                                    <Bell className="h-6 w-6 text-blue-600" />
-                                </div>
-                                <div className="flex-1">
-                                    <h2 className="text-2xl font-bold text-gray-900 mb-2">Como você quer ser avisado?</h2>
-                                    <p className="text-gray-600 text-lg leading-relaxed">Configure a frequência e o tipo de notificações 📱</p>
-                                </div>
-                            </div>
-
-                            <div className="space-y-4">
-                                <div className="flex items-center justify-between p-5 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl border border-blue-100 hover:border-blue-200 transition-colors">
-                                    <div className="space-y-1">
-                                        <Label className="text-base font-bold text-gray-900">Resumo Diário</Label>
-                                        <p className="text-sm text-gray-600">Receba um resumo das principais novidades todo dia às 18h 📬</p>
-                                    </div>
-                                    <Switch defaultChecked className="data-[state=checked]:bg-blue-600" />
-                                </div>
-
-                                <div className="flex items-center justify-between p-5 bg-gradient-to-r from-red-50 to-orange-50 rounded-xl border border-red-100 hover:border-red-200 transition-colors">
-                                    <div className="space-y-1">
-                                        <Label className="text-base font-bold text-gray-900">Alertas Urgentes</Label>
-                                        <p className="text-sm text-gray-600">Seja avisado imediatamente sobre leis importantes 🚨</p>
-                                    </div>
-                                    <Switch defaultChecked className="data-[state=checked]:bg-red-600" />
-                                </div>
-
-                                <div className="flex items-center justify-between p-5 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-100 hover:border-green-200 transition-colors">
-                                    <div className="space-y-1">
-                                        <Label className="text-base font-bold text-gray-900">Votações em Andamento</Label>
-                                        <p className="text-sm text-gray-600">Saiba quando projetos dos seus temas estão sendo votados 🗳️</p>
-                                    </div>
-                                    <Switch className="data-[state=checked]:bg-green-600" />
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Save Button */}
-                        <div className="pt-6 border-t border-gray-200">
-                            <Button
-                                onClick={handleSave}
-                                disabled={isSaving || selectedInterests.length === 0}
-                                className="w-full h-14 text-lg font-bold shadow-xl bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-xl transition-all transform hover:-translate-y-0.5 active:translate-y-0"
-                            >
-                                {isSaving ? (
-                                    <>
-                                        <Zap className="mr-2 h-5 w-5 animate-pulse" /> Salvando suas preferências...
-                                    </>
-                                ) : (
-                                    <>
-                                        <Check className="mr-2 h-5 w-5" /> Salvar Preferências
-                                    </>
-                                )}
-                            </Button>
-
-                            {selectedInterests.length === 0 && (
-                                <p className="text-center text-sm text-gray-500 mt-3 font-medium">
-                                    Escolha pelo menos um tema para continuar ⭐
+                                <p className="text-gray-600 text-lg max-w-2xl">
+                                    Configure o que você quer acompanhar. Quanto mais específico, melhores serão os alertas!
                                 </p>
-                            )}
+                            </div>
+                            <Link href="/perfil" aria-label="Voltar para o perfil">
+                                <Button variant="outline" className="text-gray-700 hover:bg-gray-50 border-gray-200 font-semibold rounded-full focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                                    <ArrowLeft className="w-4 h-4 mr-2" aria-hidden="true" /> Voltar ao Perfil
+                                </Button>
+                            </Link>
                         </div>
                     </div>
-                </div>
+                </header>
+
+                <main className="container mx-auto px-4 py-8 max-w-4xl" role="main">
+                    <div className="space-y-6">
+                        {/* Simplinho Avatar Card */}
+                        <div className="bg-white rounded-3xl shadow-lg p-6 border border-blue-100 text-center animate-in fade-in slide-in-from-bottom-4 duration-500 relative overflow-hidden">
+
+                            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 md:p-12">
+                                {/* Hero Section */}
+                                <div className="text-center mb-12">
+                                    <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-700 px-4 py-2 rounded-full text-sm font-bold mb-4 border border-blue-100">
+                                        <Sparkles className="h-4 w-4" aria-hidden="true" />
+                                        Configurações
+                                    </div>
+                                    <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
+                                        Personalize sua Experiência
+                                    </h2>
+                                    <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                                        Escolha os temas que mais importam para você. Vamos filtrar e traduzir apenas o que realmente impacta sua vida.
+                                    </p>
+                                </div>
+
+                                {/* Notification Preferences */}
+                                <div className="mb-12 pb-12 border-b border-gray-200">
+                                    <div className="flex items-center gap-3 mb-6">
+                                        <div className="p-2 bg-blue-50 rounded-lg">
+                                            <Bell className="h-5 w-5 text-blue-600" aria-hidden="true" />
+                                        </div>
+                                        <div>
+                                            <h3 className="text-xl font-bold text-gray-900">Notificações</h3>
+                                            <p className="text-sm text-gray-600">Como você prefere receber atualizações?</p>
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-4">
+                                        <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-200">
+                                            <div className="flex items-center gap-3">
+                                                <div className="p-2 bg-green-100 rounded-lg">
+                                                    <MessageCircle className="h-5 w-5 text-green-600" aria-hidden="true" />
+                                                </div>
+                                                <div>
+                                                    <Label htmlFor="whatsapp-switch" className="font-semibold text-gray-900 text-base">WhatsApp</Label>
+                                                    <p className="text-sm text-gray-600">Receba resumos direto no seu celular</p>
+                                                </div>
+                                            </div>
+                                            <Switch
+                                                id="whatsapp-switch"
+                                                checked={whatsappEnabled}
+                                                onCheckedChange={setWhatsappEnabled}
+                                                className="data-[state=checked]:bg-green-600"
+                                                aria-label="Ativar notificações por WhatsApp"
+                                            />
+                                        </div>
+
+                                        <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-200">
+                                            <div className="flex items-center gap-3">
+                                                <div className="p-2 bg-blue-100 rounded-lg">
+                                                    <Mail className="h-5 w-5 text-blue-600" aria-hidden="true" />
+                                                </div>
+                                                <div>
+                                                    <Label htmlFor="email-switch" className="font-semibold text-gray-900 text-base">E-mail</Label>
+                                                    <p className="text-sm text-gray-600">Resumos semanais na sua caixa de entrada</p>
+                                                </div>
+                                            </div>
+                                            <Switch
+                                                id="email-switch"
+                                                checked={emailEnabled}
+                                                onCheckedChange={setEmailEnabled}
+                                                className="data-[state=checked]:bg-blue-600"
+                                                aria-label="Ativar notificações por E-mail"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Interest Selection */}
+                                <div>
+                                    <div className="flex items-center gap-3 mb-6">
+                                        <div className="p-2 bg-purple-50 rounded-lg">
+                                            <Heart className="h-5 w-5 text-purple-600" aria-hidden="true" />
+                                        </div>
+                                        <div>
+                                            <h3 className="text-xl font-bold text-gray-900">Seus Interesses</h3>
+                                            <p className="text-sm text-gray-600">Selecione os temas que você quer acompanhar</p>
+                                        </div>
+                                    </div>
+
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8" role="group" aria-label="Seleção de interesses">
+                                        {INTERESTS.map((interest) => {
+                                            const isSelected = selectedInterests.includes(interest)
+                                            return (
+                                                <button
+                                                    key={interest}
+                                                    onClick={() => toggleInterest(interest)}
+                                                    className={cn(
+                                                        "flex items-center justify-between p-4 rounded-xl border-2 transition-all text-left focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2",
+                                                        isSelected
+                                                            ? "border-blue-500 bg-blue-50 shadow-sm"
+                                                            : "border-gray-200 bg-white hover:border-blue-200 hover:bg-blue-50/50"
+                                                    )}
+                                                    aria-pressed={isSelected}
+                                                >
+                                                    <span className={cn(
+                                                        "font-semibold text-sm",
+                                                        isSelected ? "text-blue-900" : "text-gray-700"
+                                                    )}>
+                                                        {interest}
+                                                    </span>
+                                                    {isSelected && (
+                                                        <div className="flex-shrink-0 w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center">
+                                                            <Check className="h-4 w-4 text-white" aria-hidden="true" />
+                                                        </div>
+                                                    )}
+                                                </button>
+                                            )
+                                        })}
+                                    </div>
+
+                                    <Button
+                                        onClick={handleSave}
+                                        disabled={selectedInterests.length === 0 || isSaving}
+                                        className="w-full h-12 text-base font-bold bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed shadow-md rounded-full focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                                    >
+                                        {isSaving ? (
+                                            <>
+                                                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" aria-hidden="true"></div>
+                                                Salvando...
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Zap className="mr-2 h-5 w-5" aria-hidden="true" />
+                                                Salvar Preferências
+                                            </>
+                                        )}
+                                    </Button>
+
+                                    {selectedInterests.length === 0 && (
+                                        <p className="text-center text-sm text-gray-500 mt-3 font-medium" role="alert">
+                                            Escolha pelo menos um tema para continuar ⭐
+                                        </p>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
             </div>
-        </div>
+        </ProtectedRoute>
     )
 }

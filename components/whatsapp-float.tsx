@@ -2,10 +2,9 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { MessageCircle, X, Send } from "lucide-react"
+import { MessageCircle, X, Send, Sparkles } from "lucide-react"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import Image from "next/image"
 import { cn } from "@/lib/utils"
 
 export function WhatsappFloat() {
@@ -40,22 +39,19 @@ export function WhatsappFloat() {
       {isOpen && (
         <div className="fixed bottom-28 left-6 z-50 animate-in slide-in-from-bottom-5 duration-300">
           <Card className="w-[340px] shadow-2xl border-none overflow-hidden">
-            <CardHeader className="bg-gradient-to-r from-blue-600 to-purple-700 text-white p-4">
+            <CardHeader className="bg-white border-b p-4 relative overflow-hidden">
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-blue-400"></div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="relative">
-                    <Image
-                      src="/simplinho.png"
-                      alt="Simplinho"
-                      width={48}
-                      height={48}
-                      className="rounded-full border-2 border-white shadow-md bg-white"
-                    />
+                    <div className="h-12 w-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center shadow-md">
+                      <Sparkles className="h-6 w-6 text-white fill-white" />
+                    </div>
                     <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-400 rounded-full border-2 border-white"></div>
                   </div>
                   <div>
-                    <h3 className="font-bold text-lg">Simplinho</h3>
-                    <p className="text-xs text-blue-100 flex items-center gap-1">
+                    <h3 className="font-bold text-lg text-gray-900">Simplinho</h3>
+                    <p className="text-xs text-gray-600 flex items-center gap-1">
                       <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span>
                       Online agora
                     </p>
@@ -65,7 +61,7 @@ export function WhatsappFloat() {
                   variant="ghost"
                   size="icon"
                   onClick={() => setIsOpen(false)}
-                  className="text-white hover:bg-white/20 rounded-full h-8 w-8"
+                  className="text-gray-600 hover:bg-gray-100 rounded-full h-8 w-8"
                 >
                   <X className="h-5 w-5" />
                 </Button>
@@ -76,22 +72,22 @@ export function WhatsappFloat() {
               <div className="p-4 bg-gray-50/50 border-b border-gray-100">
                 <div className="bg-white p-4 rounded-2xl rounded-tl-none shadow-sm border border-gray-100">
                   <p className="text-sm text-gray-800 leading-relaxed mb-2">
-                    👋 <strong>Olá! Eu sou o Simplinho!</strong>
+                    👋 <strong>Olá! Como podemos ajudar?</strong>
                   </p>
                   <p className="text-sm text-gray-600 leading-relaxed">
-                    Estou aqui para traduzir o "juridiquês" para você. Qual sua dúvida hoje?
+                    Estamos aqui para traduzir o "juridiquês" e esclarecer suas dúvidas sobre política. 💬
                   </p>
                 </div>
               </div>
 
               {/* Quick Replies */}
               <div className="p-4 space-y-2">
-                <p className="text-xs font-semibold text-gray-500 mb-3 uppercase tracking-wider">Sugestões:</p>
+                <p className="text-xs font-semibold text-gray-500 mb-3 uppercase tracking-wider">Sugestões rápidas:</p>
                 {quickMessages.map((msg, index) => (
                   <button
                     key={index}
                     onClick={() => handleQuickMessage(msg)}
-                    className="w-full text-left p-3 rounded-xl border border-blue-100 bg-blue-50/50 hover:bg-blue-50 hover:border-blue-200 transition-all text-sm font-medium text-blue-900 hover:shadow-sm active:scale-[0.98]"
+                    className="w-full text-left p-3 rounded-full border border-gray-200 bg-white hover:bg-blue-50 hover:border-blue-300 transition-all text-sm font-medium text-gray-700 hover:text-blue-700 hover:shadow-sm active:scale-[0.98]"
                   >
                     {msg}
                   </button>
@@ -112,7 +108,7 @@ export function WhatsappFloat() {
                     onClick={handleSendMessage}
                     disabled={!message.trim()}
                     size="icon"
-                    className="bg-green-500 hover:bg-green-600 text-white rounded-full shadow-md disabled:opacity-50 disabled:shadow-none h-10 w-10 shrink-0"
+                    className="bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-md disabled:opacity-50 disabled:shadow-none h-10 w-10 shrink-0"
                   >
                     <Send className="h-4 w-4 ml-0.5" />
                   </Button>
@@ -131,9 +127,9 @@ export function WhatsappFloat() {
         {/* Notification Bubble */}
         {!isOpen && (
           <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-max animate-bounce">
-            <div className="bg-white text-gray-800 text-sm font-bold py-1.5 px-3 rounded-full shadow-lg border border-gray-100 relative">
-              Posso ajudar?
-              <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-white border-b border-r border-gray-100 transform rotate-45"></div>
+            <div className="bg-white text-gray-800 text-sm font-bold py-1.5 px-3 rounded-full shadow-lg border border-gray-200 relative">
+              Posso ajudar? 💬
+              <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-white border-b border-r border-gray-200 transform rotate-45"></div>
             </div>
           </div>
         )}
@@ -145,22 +141,15 @@ export function WhatsappFloat() {
             "h-16 w-16 rounded-full shadow-2xl p-0 flex items-center justify-center transition-all duration-300 border-4 border-white",
             isOpen
               ? "bg-gray-200 hover:bg-gray-300 text-gray-600 rotate-90"
-              : "bg-gradient-to-br from-green-400 to-green-600 hover:scale-110 hover:shadow-green-500/30"
+              : "bg-blue-600 hover:bg-blue-700 hover:scale-110 hover:shadow-blue-500/30"
           )}
         >
           {isOpen ? (
             <X className="h-8 w-8" />
           ) : (
-            <div className="relative w-full h-full rounded-full overflow-hidden">
-              <Image
-                src="/simplinho.png"
-                alt="Simplinho"
-                fill
-                className="object-cover"
-              />
-            </div>
+            <MessageCircle className="h-8 w-8 text-white" />
           )}
-          <span className="sr-only">Fale com o Simplinho</span>
+          <span className="sr-only">Fale conosco</span>
         </Button>
       </div>
     </>

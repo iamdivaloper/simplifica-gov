@@ -8,6 +8,7 @@ import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { AuthProvider } from "@/contexts/auth-context"
 import { SkipLinks } from "@/components/skip-links"
+import { AccessibilityProvider } from "@/contexts/accessibility-context"
 import "./globals.css"
 
 const geistSans = Geist({
@@ -31,15 +32,17 @@ export default function RootLayout({
     <html lang="pt-BR">
       <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`} suppressHydrationWarning>
         <SkipLinks />
-        <AuthProvider>
-          <SiteHeader />
-          <main id="main-content" role="main" tabIndex={-1}>
-            {children}
-          </main>
-          <SiteFooter />
-          <WhatsappFloat />
-          <VLibras />
-        </AuthProvider>
+        <AccessibilityProvider>
+          <AuthProvider>
+            <SiteHeader />
+            <main id="main-content" role="main" tabIndex={-1}>
+              {children}
+            </main>
+            <SiteFooter />
+            <WhatsappFloat />
+            <VLibras />
+          </AuthProvider>
+        </AccessibilityProvider>
         <Analytics />
         <SpeedInsights />
       </body>
