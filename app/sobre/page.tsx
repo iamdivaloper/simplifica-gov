@@ -1,101 +1,133 @@
 import type React from "react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { ArrowRight, CheckCircle2, Users, Target, Heart } from "lucide-react"
+import { ArrowRight, CheckCircle2, Users, Target, Heart, ShieldCheck } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
 
 export default function SobrePage() {
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
-
-      <main className="flex-1">
+    <div className="min-h-screen flex flex-col bg-gray-50 font-sans">
+      <main className="flex-1 pb-20">
         {/* Hero Section */}
-        <section className="bg-primary text-white py-20">
+        <section className="bg-gradient-to-br from-blue-600 to-purple-700 text-white py-20">
           <div className="container mx-auto px-4 text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">Quem somos e por que existimos</h1>
-            <p className="text-xl md:text-2xl text-blue-100 max-w-3xl mx-auto leading-relaxed">
-              Nossa missão é simples: traduzir o "juridiquês" para a língua que todos nós falamos. Porque informação é poder.
+            <Badge className="mb-6 bg-white/10 text-blue-100 hover:bg-white/20 border-none px-4 py-1.5 text-sm font-medium backdrop-blur-sm">
+              🤝 Sobre o SimplificaGov
+            </Badge>
+            <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight">
+              Quem somos e <br className="hidden md:block" /> por que existimos
+            </h1>
+            <p className="text-xl text-blue-100 max-w-3xl mx-auto leading-relaxed mb-8">
+              Nossa missão é simples: traduzir o "juridiquês" para a língua que todos nós falamos. Porque informação clara é poder para o cidadão.
             </p>
           </div>
         </section>
 
         {/* Mission & Vision */}
-        <section className="py-16 container mx-auto px-4">
-          <div className="grid md:grid-cols-3 gap-8">
-            <Card
-              icon={<Target className="w-10 h-10 text-primary" />}
+        <section className="container mx-auto px-4 -mt-12 relative z-10">
+          <div className="grid md:grid-cols-3 gap-6">
+            <ValueCard
+              icon={<Target className="w-8 h-8 text-blue-600" />}
               title="Nossa Missão"
-              description="Tornar a política compreensível para qualquer pessoa, sem palavras difíceis."
+              description="Tornar a política compreensível para qualquer pessoa, sem palavras difíceis ou burocracia desnecessária."
             />
-            <Card
-              icon={<Users className="w-10 h-10 text-secondary-foreground" />}
+            <ValueCard
+              icon={<Users className="w-8 h-8 text-purple-600" />}
               title="Para Quem É"
-              description="Para você que trabalha, estuda e não tem tempo a perder decifrando leis complicadas."
+              description="Para você que trabalha, estuda e não tem tempo a perder decifrando leis complicadas, mas quer exercer sua cidadania."
             />
-            <Card
-              icon={<Heart className="w-10 h-10 text-red-500" />}
+            <ValueCard
+              icon={<Heart className="w-8 h-8 text-red-500" />}
               title="Nossos Valores"
-              description="Transparência total, neutralidade e respeito pelo seu tempo e inteligência."
+              description="Transparência total, neutralidade política e respeito profundo pelo seu tempo e pela sua inteligência."
             />
           </div>
         </section>
 
         {/* Story Section */}
-        <section className="py-16 bg-white">
-          <div className="container mx-auto px-4 flex flex-col md:flex-row items-center gap-12">
-            <div className="flex-1 space-y-6">
-              <h2 className="text-3xl font-bold text-gray-900">Por que criamos isso?</h2>
-              <p className="text-gray-600 text-lg leading-relaxed">
-                Percebemos que muitas decisões importantes em Brasília afetam a vida de milhões, mas a maioria das
-                pessoas só fica sabendo quando já é tarde demais, ou através de notícias confusas.
-              </p>
-              <p className="text-gray-600 text-lg leading-relaxed">
-                O SimplificaGov nasceu para ser a ponte entre o Diário Oficial e o grupo da família no WhatsApp. Usamos
-                tecnologia de ponta para ler milhares de documentos e entregar apenas o que importa para você.
-              </p>
-              <div className="flex gap-4 pt-4">
-                <div className="flex items-center gap-2 text-gray-700">
-                  <CheckCircle2 className="text-green-500" /> Sem viés partidário
+        <section className="py-20 bg-white mt-20">
+          <div className="container mx-auto px-4 flex flex-col lg:flex-row items-center gap-16">
+            <div className="flex-1 space-y-8">
+              <div className="space-y-4">
+                <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Por que criamos isso?</h2>
+                <p className="text-gray-600 text-lg leading-relaxed">
+                  Percebemos que muitas decisões importantes em Brasília afetam a vida de milhões, mas a maioria das
+                  pessoas só fica sabendo quando já é tarde demais, ou através de notícias confusas e sensacionalistas.
+                </p>
+                <p className="text-gray-600 text-lg leading-relaxed">
+                  O SimplificaGov nasceu para ser a ponte segura entre o Diário Oficial e o grupo da família no WhatsApp.
+                  Usamos tecnologia de ponta para ler milhares de documentos e entregar apenas o que importa para você,
+                  do jeito que você entende.
+                </p>
+              </div>
+
+              <div className="grid sm:grid-cols-2 gap-4 pt-4">
+                <div className="flex items-center gap-3 text-gray-700 bg-gray-50 p-3 rounded-lg border border-gray-100">
+                  <CheckCircle2 className="text-green-500 h-5 w-5" />
+                  <span className="font-medium">Sem viés partidário</span>
                 </div>
-                <div className="flex items-center gap-2 text-gray-700">
-                  <CheckCircle2 className="text-green-500" /> Fontes verificadas
+                <div className="flex items-center gap-3 text-gray-700 bg-gray-50 p-3 rounded-lg border border-gray-100">
+                  <CheckCircle2 className="text-green-500 h-5 w-5" />
+                  <span className="font-medium">Fontes 100% verificadas</span>
+                </div>
+                <div className="flex items-center gap-3 text-gray-700 bg-gray-50 p-3 rounded-lg border border-gray-100">
+                  <CheckCircle2 className="text-green-500 h-5 w-5" />
+                  <span className="font-medium">Foco no impacto real</span>
+                </div>
+                <div className="flex items-center gap-3 text-gray-700 bg-gray-50 p-3 rounded-lg border border-gray-100">
+                  <CheckCircle2 className="text-green-500 h-5 w-5" />
+                  <span className="font-medium">Privacidade garantida</span>
                 </div>
               </div>
             </div>
-            <div className="flex-1 bg-gray-100 rounded-2xl p-8 h-80 flex items-center justify-center">
-              <span className="text-gray-400 font-medium">Imagem da Equipe ou Ilustração</span>
+
+            <div className="flex-1 w-full">
+              <div className="bg-gradient-to-br from-gray-100 to-gray-200 rounded-3xl p-8 h-96 flex items-center justify-center relative overflow-hidden shadow-inner border border-gray-200">
+                <div className="absolute inset-0 opacity-10 bg-[url('/grid-pattern.svg')]"></div>
+                <div className="text-center relative z-10">
+                  <div className="bg-white p-4 rounded-full shadow-sm inline-flex mb-4">
+                    <ShieldCheck className="h-12 w-12 text-gray-400" />
+                  </div>
+                  <p className="text-gray-500 font-medium text-lg">Foto da Equipe / Ilustração</p>
+                  <p className="text-sm text-gray-400 mt-2">Em breve</p>
+                </div>
+              </div>
             </div>
           </div>
         </section>
 
         {/* CTA */}
-        <section className="py-20 bg-gray-900 text-white text-center">
+        <section className="py-20 bg-primary text-white text-center">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold mb-6">Faça parte dessa mudança</h2>
-            <p className="text-gray-400 mb-8 max-w-2xl mx-auto">
-              Comece a receber seus resumos hoje mesmo e entenda seus direitos.
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">Faça parte dessa mudança</h2>
+            <p className="text-blue-100 mb-10 max-w-2xl mx-auto text-lg">
+              Comece a receber seus resumos hoje mesmo e entenda seus direitos de forma simples e rápida.
             </p>
             <Link href="/cadastro">
-              <Button size="lg" className="h-14 px-8 text-lg font-bold">
-                Criar Conta Grátis <ArrowRight className="ml-2" />
+              <Button size="lg" variant="secondary" className="h-14 px-10 text-lg font-bold text-primary shadow-lg hover:bg-blue-50 transition-colors">
+                Criar Conta Grátis <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
           </div>
         </section>
       </main>
-
-      <footer className="bg-white border-t py-8 text-center text-gray-500 text-sm">
-        <p>© 2025 SimplificaGov. Todos os direitos reservados.</p>
-      </footer>
     </div>
   )
 }
 
-function Card({ icon, title, description }: { icon: React.ReactNode; title: string; description: string }) {
+function ValueCard({ icon, title, description }: { icon: React.ReactNode; title: string; description: string }) {
   return (
-    <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-      <div className="mb-6 bg-gray-50 w-16 h-16 rounded-full flex items-center justify-center">{icon}</div>
-      <h3 className="text-xl font-bold text-gray-900 mb-3">{title}</h3>
-      <p className="text-gray-600 leading-relaxed">{description}</p>
-    </div>
+    <Card className="border-none shadow-lg hover:shadow-xl transition-all duration-300 group bg-white h-full">
+      <CardHeader className="flex flex-col items-center text-center pb-2 pt-8">
+        <div className="mb-4 bg-gray-50 w-16 h-16 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 border border-gray-100">
+          {icon}
+        </div>
+        <CardTitle className="text-xl font-bold text-gray-900">{title}</CardTitle>
+      </CardHeader>
+      <CardContent className="text-center pb-8">
+        <p className="text-gray-600 leading-relaxed">{description}</p>
+      </CardContent>
+    </Card>
   )
 }

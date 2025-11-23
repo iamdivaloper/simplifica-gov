@@ -19,24 +19,24 @@ import Image from "next/image"
 
 export function SiteHeader() {
   const pathname = usePathname()
-  const [isLoggedIn] = useState(true) // Mock: change to false to see login state
+  const [isLoggedIn] = useState(false) // Mock: change to true to see login state
   const unreadAlerts = 3 // Mock unread count
 
   const navItems = [
     { href: "/", label: "Início", icon: Home },
     { href: "/projetos-de-lei", label: "Explorar Leis", icon: FileText },
-    { href: "/parlamentares", label: "Parlamentares", icon: Users },
+    { href: "/parlamentares", label: "Políticos", icon: Users },
     { href: "/resumo-diario", label: "Resumo Diário", icon: Newspaper },
   ]
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b bg-white/95 backdrop-blur-sm shadow-sm">
+    <header className="sticky top-0 z-40 w-full border-b bg-white/95 backdrop-blur-sm shadow-sm" role="banner">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <div className="flex items-center gap-8">
-          <Link href="/" className="flex items-center gap-2 group">
+          <Link href="/" className="flex items-center gap-2 group" aria-label="Página inicial do SimplificaGov">
             <Image
               src="/logo-full.png"
-              alt="SimplificaGov"
+              alt="SimplificaGov - Logotipo"
               width={200}
               height={48}
               className="transition-transform group-hover:scale-105"
@@ -44,7 +44,7 @@ export function SiteHeader() {
             />
           </Link>
 
-          <nav className="hidden md:flex gap-2">
+          <nav id="navigation" className="hidden md:flex gap-2" role="navigation" aria-label="Navegação principal">
             {navItems.map((item) => {
               const Icon = item.icon
               const isActive = pathname === item.href
@@ -58,8 +58,10 @@ export function SiteHeader() {
                       ? "bg-blue-600 text-white shadow-md"
                       : "text-gray-700 hover:text-blue-600 hover:bg-blue-50"
                   )}
+                  aria-current={isActive ? "page" : undefined}
+                  aria-label={item.label}
                 >
-                  <Icon className="h-4 w-4" />
+                  <Icon className="h-4 w-4" aria-hidden="true" />
                   {item.label}
                 </Link>
               )
@@ -76,8 +78,10 @@ export function SiteHeader() {
                   <Button
                     variant="outline"
                     className="hidden sm:flex items-center gap-2 h-10 px-4 border-2 border-blue-200 hover:bg-blue-50 hover:border-blue-300 font-semibold"
+                    aria-label="Menu do usuário"
+                    aria-haspopup="true"
                   >
-                    <div className="w-7 h-7 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center">
+                    <div className="w-7 h-7 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center" aria-hidden="true">
                       <User className="h-4 w-4 text-primary" />
                     </div>
                     <span className="text-gray-900">Olá, Maria</span>

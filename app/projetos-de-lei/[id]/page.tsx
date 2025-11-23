@@ -67,13 +67,13 @@ export default function ProjectDetails() {
             />
 
             <div className="flex flex-wrap gap-2 mb-4">
-              <Badge className="bg-blue-600 text-white border-0 font-semibold">
+              <Badge className="bg-cyan-100 text-cyan-700 border-cyan-200 font-semibold">
                 Tecnologia
               </Badge>
               <Badge variant="outline" className="text-gray-700 border-gray-400 font-medium">
                 PL 2630/2020
               </Badge>
-              <Badge className="bg-orange-100 text-orange-800 border-0">
+              <Badge className="bg-blue-100 text-blue-700 border-blue-200 font-medium">
                 Em tramitação
               </Badge>
             </div>

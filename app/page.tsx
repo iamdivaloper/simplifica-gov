@@ -25,7 +25,7 @@ export default function LandingPage() {
                   <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-gray-900 leading-tight">
                     Descomplique a política <br />
                     <span className="text-primary relative inline-block">
-                      hoje mesmo.
+                      hoje mesmo
                       <svg
                         className="absolute w-full h-3 -bottom-1 left-0 text-secondary -z-10"
                         viewBox="0 0 100 10"

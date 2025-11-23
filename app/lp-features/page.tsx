@@ -4,87 +4,120 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Bell, MapPin, Shield, Zap, Radio, BookOpen } from "lucide-react"
+import { Bell, MapPin, Shield, Zap, Radio, BookOpen, CheckCircle2, ArrowRight } from "lucide-react"
 
 export default function FeaturesLP() {
   return (
-    <div className="min-h-screen bg-slate-50 font-sans">
-      <header className="bg-white border-b">
-        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="h-8 w-8 bg-primary rounded-lg flex items-center justify-center text-white font-bold text-xl">
-              S
+    <div className="min-h-screen bg-gray-50 font-sans">
+      <main className="pb-20">
+        {/* Hero Section */}
+        <section className="bg-gradient-to-br from-blue-600 to-purple-700 text-white py-20">
+          <div className="container mx-auto px-4 text-center">
+            <Badge className="mb-6 bg-white/10 text-blue-100 hover:bg-white/20 border-none px-4 py-1.5 text-sm font-medium backdrop-blur-sm">
+              ✨ Funcionalidades do SimplificaGov
+            </Badge>
+            <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight">
+              Tudo para você exercer<br className="hidden md:block" /> sua cidadania com poder
+            </h1>
+            <p className="text-xl text-blue-100 max-w-2xl mx-auto leading-relaxed mb-10">
+              Uma plataforma completa, conectada aos dados oficiais e desenhada para traduzir a complexidade de Brasília para a sua realidade.
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Link href="/cadastro">
+                <Button size="lg" className="bg-white text-primary hover:bg-blue-50 font-bold h-12 px-8 shadow-lg">
+                  Criar Conta Gratuita
+                </Button>
+              </Link>
+              <Link href="/projetos-de-lei">
+                <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 font-semibold h-12 px-8">
+                  Explorar Projetos
+                </Button>
+              </Link>
             </div>
-            <span className="text-xl font-bold text-slate-900">SimplificaGov</span>
           </div>
-          <Link href="/cadastro">
-            <Button>Criar Conta</Button>
-          </Link>
-        </div>
-      </header>
+        </section>
 
-      <main className="container mx-auto px-4 py-16">
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <Badge className="mb-4">Funcionalidades</Badge>
-          <h1 className="text-4xl font-bold mb-4 text-slate-900">Tudo o que você precisa para exercer sua cidadania</h1>
-          <p className="text-xl text-slate-600">Uma plataforma completa conectada aos dados oficiais do governo.</p>
-        </div>
+        <div className="container mx-auto px-4 py-16">
+          <Tabs defaultValue="cidadao" className="max-w-5xl mx-auto mb-20">
+            <div className="flex justify-center mb-12">
+              <TabsList className="grid w-full max-w-md grid-cols-2 h-12 bg-white border border-gray-200 shadow-sm rounded-full p-1">
+                <TabsTrigger value="cidadao" className="rounded-full text-sm font-semibold data-[state=active]:bg-primary data-[state=active]:text-white">
+                  Para o Cidadão
+                </TabsTrigger>
+                <TabsTrigger value="tecnologia" className="rounded-full text-sm font-semibold data-[state=active]:bg-primary data-[state=active]:text-white">
+                  Nossa Tecnologia
+                </TabsTrigger>
+              </TabsList>
+            </div>
 
-        <Tabs defaultValue="cidadao" className="max-w-4xl mx-auto mb-20">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="cidadao">Para o Cidadão</TabsTrigger>
-            <TabsTrigger value="tecnologia">Nossa Tecnologia</TabsTrigger>
-          </TabsList>
-          <TabsContent value="cidadao" className="mt-8 grid md:grid-cols-2 gap-6">
-            <FeatureCard
-              icon={<Radio className="w-6 h-6 text-blue-600" />}
-              title="Áudios Explicativos"
-              desc="Resumos em áudio gerados por IA com linguagem natural e sotaque neutro."
-            />
-            <FeatureCard
-              icon={<MapPin className="w-6 h-6 text-green-600" />}
-              title="Monitoramento Hiperlocal"
-              desc="Filtramos as leis da sua cidade com base no seu CEP."
-            />
-            <FeatureCard
-              icon={<Zap className="w-6 h-6 text-yellow-600" />}
-              title="Alertas em Tempo Real"
-              desc="Saiba assim que uma votação importante for concluída."
-            />
-            <FeatureCard
-              icon={<BookOpen className="w-6 h-6 text-purple-600" />}
-              title="Dicionário Político"
-              desc="Toque em qualquer termo difícil para ver o significado."
-            />
-          </TabsContent>
-          <TabsContent value="tecnologia" className="mt-8 grid md:grid-cols-2 gap-6">
-            <FeatureCard
-              icon={<Shield className="w-6 h-6 text-slate-800" />}
-              title="IA Auditável"
-              desc="Nossos algoritmos priorizam a fidelidade ao texto original."
-            />
-            <FeatureCard
-              icon={<Bell className="w-6 h-6 text-red-600" />}
-              title="Integração WhatsApp API"
-              desc="Infraestrutura robusta para entregar milhões de mensagens."
-            />
-          </TabsContent>
-        </Tabs>
+            <TabsContent value="cidadao" className="mt-0 grid md:grid-cols-2 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <FeatureCard
+                icon={<Radio className="w-6 h-6 text-blue-600" />}
+                title="Áudios Explicativos"
+                desc="Não tem tempo de ler? Ouça resumos de leis gerados por IA com linguagem natural e objetiva em 2 minutos."
+              />
+              <FeatureCard
+                icon={<MapPin className="w-6 h-6 text-green-600" />}
+                title="Monitoramento Hiperlocal"
+                desc="Filtramos automaticamente as leis que afetam seu bairro e cidade com base no seu CEP. Saiba o que muda na sua rua."
+              />
+              <FeatureCard
+                icon={<Zap className="w-6 h-6 text-yellow-600" />}
+                title="Alertas em Tempo Real"
+                desc="Seja o primeiro a saber. Receba notificações assim que uma votação importante for concluída ou um projeto avançar."
+              />
+              <FeatureCard
+                icon={<BookOpen className="w-6 h-6 text-purple-600" />}
+                title="Dicionário Político"
+                desc="Adeus 'juridiquês'. Toque em qualquer termo difícil para ver uma explicação simples e direta do que ele significa."
+              />
+            </TabsContent>
 
-        <div className="bg-primary rounded-3xl p-12 text-center text-white">
-          <h2 className="text-3xl font-bold mb-6">Comece a usar hoje</h2>
-          <Link href="/cadastro">
-            <Button size="lg" variant="secondary" className="h-14 px-8 text-lg font-bold">
-              Criar Conta Gratuita
-            </Button>
-          </Link>
+            <TabsContent value="tecnologia" className="mt-0 grid md:grid-cols-2 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <FeatureCard
+                icon={<Shield className="w-6 h-6 text-slate-800" />}
+                title="IA Auditável e Neutra"
+                desc="Nossos algoritmos são desenhados para priorizar a fidelidade ao texto original, sem viés partidário ou opiniões."
+              />
+              <FeatureCard
+                icon={<Bell className="w-6 h-6 text-red-600" />}
+                title="Integração WhatsApp API"
+                desc="Infraestrutura robusta para entregar milhões de mensagens com alta disponibilidade e baixa latência."
+              />
+              <FeatureCard
+                icon={<CheckCircle2 className="w-6 h-6 text-teal-600" />}
+                title="Dados Oficiais em Tempo Real"
+                desc="Conexão direta com as APIs da Câmara e Senado. A informação chega aqui no mesmo instante que é publicada."
+              />
+              <FeatureCard
+                icon={<Shield className="w-6 h-6 text-indigo-600" />}
+                title="Privacidade em Primeiro Lugar"
+                desc="Seus dados de navegação e preferências são seus. Seguimos rigorosamente a LGPD e não vendemos informações."
+              />
+            </TabsContent>
+          </Tabs>
+
+          <div className="bg-gradient-to-r from-gray-900 to-slate-800 rounded-3xl p-12 text-center text-white shadow-2xl relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-full h-full bg-[url('/grid-pattern.svg')] opacity-10"></div>
+            <div className="relative z-10 max-w-2xl mx-auto">
+              <h2 className="text-3xl font-bold mb-6">Pronto para transformar sua cidadania?</h2>
+              <p className="text-gray-300 mb-8 text-lg">
+                Junte-se a milhares de brasileiros que já estão acompanhando a política de perto, de forma simples e rápida.
+              </p>
+              <Link href="/cadastro">
+                <Button size="lg" className="h-14 px-8 text-lg font-bold bg-primary hover:bg-blue-600 shadow-lg hover:shadow-blue-900/20 transition-all">
+                  Começar Agora <ArrowRight className="ml-2 h-5 w-5" />
+                </Button>
+              </Link>
+            </div>
+          </div>
         </div>
       </main>
 
-      <div className="fixed bottom-4 right-4 z-50">
+      <div className="fixed bottom-6 right-6 z-50">
         <Link href="/">
-          <Button variant="secondary" size="sm" className="shadow-lg border">
-            Voltar para Principal
+          <Button variant="secondary" size="sm" className="shadow-xl border border-gray-200 bg-white hover:bg-gray-50 text-gray-700 font-medium rounded-full px-6 py-6 h-auto">
+            Voltar para Início
           </Button>
         </Link>
       </div>
@@ -94,13 +127,15 @@ export default function FeaturesLP() {
 
 function FeatureCard({ icon, title, desc }: { icon: React.ReactNode; title: string; desc: string }) {
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center gap-4">
-        <div className="h-12 w-12 rounded-lg bg-slate-100 flex items-center justify-center">{icon}</div>
-        <CardTitle className="text-lg">{title}</CardTitle>
+    <Card className="border-none shadow-md hover:shadow-xl transition-all duration-300 group bg-white">
+      <CardHeader className="flex flex-row items-start gap-4 pb-2">
+        <div className="h-12 w-12 rounded-xl bg-gray-50 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 border border-gray-100">
+          {icon}
+        </div>
+        <CardTitle className="text-xl font-bold text-gray-900 pt-2">{title}</CardTitle>
       </CardHeader>
       <CardContent>
-        <p className="text-slate-600">{desc}</p>
+        <p className="text-gray-600 leading-relaxed">{desc}</p>
       </CardContent>
     </Card>
   )
