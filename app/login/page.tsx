@@ -6,28 +6,41 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import Link from "next/link"
 import { ArrowLeft, MessageCircle, AlertCircle } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { auth } from "@/lib/auth"
 
 export default function LoginPage() {
+  const router = useRouter()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
   const [isLoading, setIsLoading] = useState(false)
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     setError("")
     setIsLoading(true)
 
-    // Simulate validation/login
-    setTimeout(() => {
+    if (!email || !password) {
+      setError("Ops! Parece que você esqueceu de preencher algo. Dá uma olhadinha? 😉")
       setIsLoading(false)
-      if (!email || !password) {
-        setError("Ops! Parece que você esqueceu de preencher algo. Dá uma olhadinha? 😉")
-        return
-      }
-      // Simulate invalid credentials for demo
-      setError("Não encontramos essa conta. Que tal conferir se digitou certinho?")
-    }, 1000)
+      return
+    }
+
+    try {
+      await auth.login({ email, senha: password })
+
+      // Check for redirect destination
+      const redirectPath = sessionStorage.getItem("redirectAfterLogin") || "/perfil"
+      sessionStorage.removeItem("redirectAfterLogin")
+
+      router.push(redirectPath)
+    } catch (err: any) {
+      console.error("Login error:", err)
+      setError(err.message || "Não encontramos essa conta. Que tal conferir se digitou certinho?")
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (

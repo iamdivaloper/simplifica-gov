@@ -8,8 +8,11 @@ import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import { ArrowRight, Check, Loader2, MessageSquare, Sparkles, AlertCircle } from "lucide-react"
 import Link from "next/link"
+import { auth } from "@/lib/auth"
+import { useRouter } from "next/navigation"
 
 export default function CadastroPage() {
+  const router = useRouter()
   const [step, setStep] = useState<"form" | "otp" | "success">("form")
   const [isLoading, setIsLoading] = useState(false)
   const [formData, setFormData] = useState({
@@ -25,7 +28,7 @@ export default function CadastroPage() {
     privacy: ""
   })
 
-  const handleSendOtp = (e: React.FormEvent) => {
+  const handleSendOtp = async (e: React.FormEvent) => {
     e.preventDefault()
 
     // Validation
@@ -54,18 +57,35 @@ export default function CadastroPage() {
     }
 
     setIsLoading(true)
+
+    // In a real app, we would send OTP here. 
+    // For this demo/MVP, we'll simulate OTP sending but prepare for real registration.
     setTimeout(() => {
       setIsLoading(false)
       setStep("otp")
     }, 1500)
   }
 
-  const handleVerifyOtp = () => {
+  const handleVerifyOtp = async () => {
     setIsLoading(true)
-    setTimeout(() => {
-      setIsLoading(false)
+    try {
+      // Register the user after OTP verification
+      await auth.register({
+        nome: formData.name,
+        email: `${formData.whatsapp.replace(/\D/g, '')}@temp.com`, // Temporary email generation strategy
+        senha: "temp_password", // In a real flow, user would set password or use passwordless
+        contato: formData.whatsapp,
+        regiao: formData.cep, // Using CEP as region proxy for now
+        preferencia_midia: "texto"
+      })
+
       setStep("success")
-    }, 1500)
+    } catch (error) {
+      console.error("Registration failed:", error)
+      // Handle error (show message to user)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (

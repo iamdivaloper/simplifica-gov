@@ -23,7 +23,7 @@ export default function Error({
                 </div>
                 <h1 className="text-2xl font-bold text-gray-900 mb-2">Algo deu errado</h1>
                 <p className="text-gray-600 mb-8">
-                    Desculpe, tivemos um problema técnico. Nossa equipe já foi notificada.
+                    Ops! Algo não saiu como planejado. Nossa equipe de esquilos digitais já foi avisada e está correndo para resolver. Que tal tentar de novo em alguns instantes?
                 </p>
                 <Button
                     onClick={() => reset()}

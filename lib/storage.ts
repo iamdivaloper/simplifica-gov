@@ -1,11 +1,12 @@
 // Local storage module for SimplificaGov
 // Handles localStorage persistence with backend synchronization
 
-import { PreferenciaTema } from "./api";
+import { PreferenciaTema, Alerta } from "./api";
 
 const STORAGE_KEYS = {
     FAVORITOS: "simplificagov_favoritos",
     PREFERENCIAS: "simplificagov_preferencias",
+    ALERTAS: "simplificagov_alertas",
     LAST_SYNC: "simplificagov_last_sync",
 } as const;
 
@@ -109,6 +110,59 @@ export function removePreferenciaLocal(tema: string): void {
 }
 
 /**
+ * Save alertas to localStorage
+ */
+export function saveAlertas(alertas: Alerta[]): void {
+    try {
+        localStorage.setItem(STORAGE_KEYS.ALERTAS, JSON.stringify(alertas));
+    } catch (error) {
+        console.error("Failed to save alertas to localStorage:", error);
+    }
+}
+
+/**
+ * Get alertas from localStorage
+ */
+export function getAlertas(): Alerta[] {
+    try {
+        const stored = localStorage.getItem(STORAGE_KEYS.ALERTAS);
+        return stored ? JSON.parse(stored) : [];
+    } catch (error) {
+        console.error("Failed to get alertas from localStorage:", error);
+        return [];
+    }
+}
+
+/**
+ * Add a single alerta to localStorage
+ */
+export function addAlertaLocal(alerta: Alerta): void {
+    const alertas = getAlertas();
+    if (!alertas.find(a => a.id === alerta.id)) {
+        alertas.push(alerta);
+        saveAlertas(alertas);
+    }
+}
+
+/**
+ * Remove a single alerta from localStorage
+ */
+export function removeAlertaLocal(id: string): void {
+    const alertas = getAlertas();
+    const filtered = alertas.filter(a => a.id !== id);
+    saveAlertas(filtered);
+}
+
+/**
+ * Mark alerta as read in localStorage
+ */
+export function markAlertaAsReadLocal(id: string): void {
+    const alertas = getAlertas();
+    const updated = alertas.map(a => a.id === id ? { ...a, read: true } : a);
+    saveAlertas(updated);
+}
+
+/**
  * Save last sync timestamp
  */
 export function saveLastSync(): void {
@@ -183,6 +237,7 @@ export function clearAllStorage(): void {
     try {
         localStorage.removeItem(STORAGE_KEYS.FAVORITOS);
         localStorage.removeItem(STORAGE_KEYS.PREFERENCIAS);
+        localStorage.removeItem(STORAGE_KEYS.ALERTAS);
         localStorage.removeItem(STORAGE_KEYS.LAST_SYNC);
     } catch (error) {
         console.error("Failed to clear storage:", error);

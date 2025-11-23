@@ -29,11 +29,22 @@ export function ProtectedRoute({ children, redirectTo = "/login" }: ProtectedRou
                 if (typeof window !== "undefined") {
                     sessionStorage.setItem("redirectAfterLogin", pathname)
                 }
-                router.push(redirectTo)
+                router.replace(redirectTo)
             }
         }
 
+        // Check immediately
         checkAuth()
+
+        // Listen for storage events (in case of logout in another tab)
+        const handleStorageChange = (e: StorageEvent) => {
+            if (e.key === "simplificagov_token") {
+                checkAuth()
+            }
+        }
+
+        window.addEventListener("storage", handleStorageChange)
+        return () => window.removeEventListener("storage", handleStorageChange)
     }, [pathname, redirectTo, router])
 
     // Show nothing while checking authentication

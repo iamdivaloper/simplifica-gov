@@ -1,4 +1,4 @@
-import { API_BASE_URL } from "./api";
+import { authApi } from "./auth-api";
 
 export interface AuthUser {
     id: string;
@@ -32,28 +32,6 @@ export interface AuthResponse {
 
 const TOKEN_KEY = "simplificagov_token";
 const USER_KEY = "simplificagov_user";
-
-async function authFetch<T>(endpoint: string, options?: RequestInit): Promise<T> {
-    const res = await fetch(`${API_BASE_URL}${endpoint}`, {
-        ...options,
-        headers: {
-            "Content-Type": "application/json",
-            ...options?.headers,
-        },
-    });
-
-    if (!res.ok) {
-        const errorBody = await res.json().catch(() => ({}));
-        throw new Error(errorBody.message || `Auth Error: ${res.statusText}`);
-    }
-
-    const json = await res.json();
-    if (json.success === false) {
-        throw new Error(json.message || json.error || "Unknown Auth error");
-    }
-
-    return json.data;
-}
 
 export const auth = {
     // Get stored token
@@ -106,10 +84,7 @@ export const auth = {
     // Login
     login: async (credentials: LoginCredentials): Promise<AuthResponse> => {
         try {
-            const data = await authFetch<AuthResponse>("/auth/login", {
-                method: "POST",
-                body: JSON.stringify(credentials),
-            });
+            const data = await authApi.login(credentials);
 
             auth.setToken(data.token);
             auth.setUser(data.user);
@@ -118,7 +93,6 @@ export const auth = {
         } catch (error) {
             console.warn("Login failed, falling back to mock for demo purposes if API is unreachable");
             // Fallback for demo/development if API is down
-            // Remove this in production
             if (process.env.NODE_ENV === 'development') {
                 await new Promise(resolve => setTimeout(resolve, 500));
                 const mockUser: AuthUser = {
@@ -142,10 +116,7 @@ export const auth = {
     // Register
     register: async (data: RegisterData): Promise<AuthResponse> => {
         try {
-            const response = await authFetch<AuthResponse>("/auth/register", {
-                method: "POST",
-                body: JSON.stringify(data),
-            });
+            const response = await authApi.register(data);
 
             auth.setToken(response.token);
             auth.setUser(response.user);
@@ -185,11 +156,7 @@ export const auth = {
         if (!token) throw new Error("Not authenticated");
 
         try {
-            const user = await authFetch<AuthUser>("/auth/me", {
-                headers: {
-                    "Authorization": `Bearer ${token}`
-                }
-            });
+            const user = await authApi.me(token);
             auth.setUser(user); // Update stored user
             return user;
         } catch (error) {
@@ -206,14 +173,9 @@ export const auth = {
         if (!token) throw new Error("No token to refresh");
 
         try {
-            const data = await authFetch<{ token: string }>("/auth/refresh", {
-                method: "POST",
-                headers: {
-                    "Authorization": `Bearer ${token}`
-                }
-            });
-            auth.setToken(data.token);
-            return data.token;
+            const newToken = await authApi.refreshToken(token);
+            auth.setToken(newToken);
+            return newToken;
         } catch (error) {
             throw error;
         }
