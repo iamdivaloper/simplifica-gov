@@ -253,21 +253,47 @@ export const api = {
         }
 
         try {
-            const data = await fetchApi<{
-                resumo: string;
+            // First, try to get the lei details
+            const lei = await api.getLeiById(id);
+
+            // Use SimplificaGov AI to analyze the lei
+            const { analisarLei } = await import("./simplificagov-ai");
+            const analise = await analisarLei(lei.ementa, lei.link_inteiro_teor);
+
+            // Transform SimplificaGov analysis to expected format
+            const data = {
+                resumo: analise.roteiro_audio_whatsapp,
                 toolkit: {
-                    frases_chave: string[];
-                    roteiro_video: string;
-                };
-            }>(`/leis/${id}/traduzir`, { method: "POST" });
+                    frases_chave: analise.tags_mapa_afetos,
+                    roteiro_video: `${analise.titulo_simples}\n\n${analise.cards_visuais.impacto_bolso}\n${analise.cards_visuais.impacto_direitos}\n\nStatus: ${analise.cards_visuais.status_projeto}\n\nÍndice de Complexidade: ${analise.auditoria_ia_responsavel.nota_complexidade_original}/100\nFonte: ${analise.auditoria_ia_responsavel.fonte_citada}`
+                }
+            };
 
             // Cache permanently (no TTL) to save AI tokens
             await cache.set("traducoes", `traducao_${id}`, data, TTL.TRADUCOES);
 
             return data;
         } catch (error) {
-            console.warn("API falhou, usando dados mockados:", error);
-            throw new Error("Tradução não disponível nas fontes secundárias");
+            console.warn("[API] SimplificaGov AI falhou, tentando backend:", error);
+
+            // Fallback to backend API if AI fails
+            try {
+                const data = await fetchApi<{
+                    resumo: string;
+                    toolkit: {
+                        frases_chave: string[];
+                        roteiro_video: string;
+                    };
+                }>(`/leis/${id}/traduzir`, { method: "POST" });
+
+                // Cache permanently (no TTL) to save AI tokens
+                await cache.set("traducoes", `traducao_${id}`, data, TTL.TRADUCOES);
+
+                return data;
+            } catch (backendError) {
+                console.error("[API] Backend também falhou:", backendError);
+                throw new Error("Tradução não disponível no momento");
+            }
         }
     },
 
