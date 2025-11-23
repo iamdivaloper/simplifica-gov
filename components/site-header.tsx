@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { User, Menu, Home, FileText, Newspaper, Bell, Star, Settings, LogOut, ChevronDown, Users } from "lucide-react"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { SyncIndicator } from "@/components/SyncIndicator"
+// import { SyncIndicator } from "@/components/SyncIndicator"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -72,7 +72,7 @@ export function SiteHeader() {
 
         <div className="flex items-center gap-3">
           {/* Sync Status Indicator */}
-          <SyncIndicator />
+          {/* <SyncIndicator /> */}
 
           {isLoggedIn ? (
             <>
