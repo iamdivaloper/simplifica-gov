@@ -95,6 +95,18 @@ export interface ApiResponse<T> {
 // const MOCK_PREFERENCIAS ...
 
 async function fetchApi<T>(endpoint: string, options?: RequestInit): Promise<T> {
+    // ============================================================================
+    // MOCK INTERCEPTOR - Activated when NEXT_PUBLIC_USE_MOCKS=true
+    // ============================================================================
+    if (process.env.NEXT_PUBLIC_USE_MOCKS === 'true') {
+        console.log('[API] Using MOCK data (NEXT_PUBLIC_USE_MOCKS=true)');
+        const { mockFetch } = await import('./mocks');
+        return mockFetch<T>(endpoint, options);
+    }
+
+    // ============================================================================
+    // ORIGINAL API CODE (Preserved - No changes below this line)
+    // ============================================================================
     const token = auth.getToken();
 
     const res = await fetch(`${API_BASE_URL}${endpoint}`, {
