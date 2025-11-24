@@ -28,6 +28,7 @@ export interface Lei {
         pontos_positivos: string[];
         pontos_negativos: string[];
     };
+    expires_at?: string;
 }
 
 export interface Cidadao {
@@ -51,6 +52,7 @@ export interface Parlamentar {
     projetos_apresentados: number;
     projetos_aprovados: number;
     presenca_sessoes: number; // percentual
+    expires_at?: string;
 }
 
 export interface Alerta {
@@ -63,18 +65,21 @@ export interface Alerta {
     category?: string;
     message?: string;
     title?: string;
+    expires_at?: string;
 }
 
 export interface PreferenciaTema {
     tema: string;
     nivel_interesse?: number;
     created_at?: string;
+    expires_at?: string;
 }
 
 export interface Estatisticas {
     total_leis: number;
     total_cidadaos: number;
     total_parlamentares: number;
+    expires_at?: string;
 }
 
 export interface ApiResponse<T> {
