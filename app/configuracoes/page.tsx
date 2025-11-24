@@ -4,11 +4,12 @@ import { useState, useEffect } from "react"
 import { api } from "@/lib/api"
 import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
-import { Sparkles, Check, Heart, Bell, Zap, ArrowLeft, Mail, MessageCircle } from "lucide-react"
+import { Sparkles, Check, Heart, Bell, Zap, ArrowLeft, Mail, MessageCircle, CheckCircle2, XCircle } from "lucide-react"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 import { ProtectedRoute } from "@/components/protected-route"
 import { Label } from "@/components/ui/label"
+import { useToast } from "@/hooks/use-toast"
 
 const INTERESTS = [
     "Salário e Benefícios Trabalhistas",
@@ -55,6 +56,7 @@ export default function ConfiguracoesPage() {
     const [isSaving, setIsSaving] = useState(false)
     const [whatsappEnabled, setWhatsappEnabled] = useState(false)
     const [emailEnabled, setEmailEnabled] = useState(false)
+    const { toast } = useToast()
 
     useEffect(() => {
         const loadPreferences = async () => {
@@ -65,12 +67,17 @@ export default function ConfiguracoesPage() {
                 setInitialInterests(themes)
             } catch (error) {
                 console.error("Failed to load preferences", error)
+                toast({
+                    title: "Ops! Algo deu errado",
+                    description: "Não conseguimos carregar suas preferências. Tente recarregar a página.",
+                    variant: "destructive",
+                })
             } finally {
                 setIsLoading(false)
             }
         }
         loadPreferences()
-    }, [])
+    }, [toast])
 
     const toggleInterest = (interest: string) => {
         setSelectedInterests((prev) =>
@@ -94,10 +101,29 @@ export default function ConfiguracoesPage() {
 
             // Update initial state to match current
             setInitialInterests(selectedInterests)
-            alert("✅ Preferências salvas com sucesso!")
+
+            toast({
+                title: (
+                    <div className="flex items-center gap-2">
+                        <CheckCircle2 className="h-5 w-5 text-green-600" />
+                        <span>Tudo certo!</span>
+                    </div>
+                ),
+                description: `Suas preferências foram salvas. Agora você receberá alertas sobre ${selectedInterests.length} ${selectedInterests.length === 1 ? 'tema' : 'temas'} que importam para você.`,
+                className: "border-green-200 bg-green-50",
+            })
         } catch (error) {
             console.error("Failed to save preferences", error)
-            alert("❌ Erro ao salvar preferências. Tente novamente.")
+            toast({
+                title: (
+                    <div className="flex items-center gap-2">
+                        <XCircle className="h-5 w-5 text-red-600" />
+                        <span>Não conseguimos salvar</span>
+                    </div>
+                ),
+                description: "Verifique sua conexão e tente novamente. Se o problema persistir, entre em contato conosco.",
+                variant: "destructive",
+            })
         } finally {
             setIsSaving(false)
         }

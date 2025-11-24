@@ -126,10 +126,10 @@ export function WhatsappFloat() {
       <div className="fixed bottom-6 left-6 z-50 group">
         {/* Notification Bubble */}
         {!isOpen && (
-          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-max animate-bounce">
-            <div className="bg-white text-gray-800 text-sm font-bold py-1.5 px-3 rounded-full shadow-lg border border-gray-200 relative">
+          <div className="absolute bottom-full left-0 mb-3 max-w-[160px] animate-bounce">
+            <div className="bg-white text-gray-800 text-sm font-bold py-1.5 px-3 rounded-full shadow-lg border border-gray-200 relative whitespace-nowrap">
               Posso ajudar? 💬
-              <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-white border-b border-r border-gray-200 transform rotate-45"></div>
+              <div className="absolute -bottom-1.5 left-6 w-3 h-3 bg-white border-b border-r border-gray-200 transform rotate-45"></div>
             </div>
           </div>
         )}

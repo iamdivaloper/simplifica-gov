@@ -9,6 +9,7 @@ import { SiteFooter } from "@/components/site-footer"
 import { AuthProvider } from "@/contexts/auth-context"
 import { SkipLinks } from "@/components/skip-links"
 import { AccessibilityProvider } from "@/contexts/accessibility-context"
+import { Toaster } from "@/components/ui/toaster"
 import "./globals.css"
 
 const geistSans = Geist({
@@ -41,6 +42,7 @@ export default function RootLayout({
             <SiteFooter />
             <WhatsappFloat />
             <VLibras />
+            <Toaster />
           </AuthProvider>
         </AccessibilityProvider>
         <Analytics />

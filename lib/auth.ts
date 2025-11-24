@@ -91,7 +91,6 @@ export const auth = {
 
             return data;
         } catch (error) {
-            console.warn("Login failed, falling back to mock for demo purposes if API is unreachable");
             // Fallback for demo/development if API is down
             if (process.env.NODE_ENV === 'development') {
                 await new Promise(resolve => setTimeout(resolve, 500));
@@ -123,7 +122,6 @@ export const auth = {
 
             return response;
         } catch (error) {
-            console.warn("Register failed, falling back to mock for demo purposes");
             if (process.env.NODE_ENV === 'development') {
                 await new Promise(resolve => setTimeout(resolve, 500));
                 const mockUser: AuthUser = {

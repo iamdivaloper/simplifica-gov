@@ -126,17 +126,53 @@ function handleLeis(route: ParsedRoute): any {
  * Handle /parlamentares endpoints
  */
 function handleParlamentares(route: ParsedRoute): any {
-    const { id, method, params } = route;
+    const { id, action, method, params } = route;
 
-    // GET /parlamentares/:id
+    // GET /parlamentares/:id/analytics
+    if (id && action === 'analytics' && method === 'GET') {
+        return {
+            projetos_por_tema: {
+                "Saúde": 45,
+                "Educação": 32,
+                "Segurança": 28,
+                "Economia": 23,
+                "Meio Ambiente": 18
+            },
+            taxa_aprovacao: 0.18,
+            presenca_media: 0.92,
+            votos_importantes: [
+                { lei_id: "1", voto: "favorável", data: "2024-01-15" },
+                { lei_id: "2", voto: "contrário", data: "2024-02-20" }
+            ],
+            periodo_analise: {
+                inicio: "2023-01-01",
+                fim: "2024-12-31"
+            }
+        };
+    }
+
+    // GET /parlamentares/:id?analytics=1
     if (id && method === 'GET') {
         const parlamentar = MOCK_PARLAMENTARES.find(p => p.id === id);
         if (!parlamentar) throw new Error('Parlamentar não encontrado');
+
+        // If analytics param is present, include analytics data
+        if (params?.get('analytics') === '1') {
+            return {
+                ...parlamentar,
+                analytics: {
+                    projetos_por_tema: { "Saúde": 45, "Educação": 32 },
+                    taxa_aprovacao: 0.18,
+                    presenca_media: 0.92
+                }
+            };
+        }
+
         return parlamentar;
     }
 
     // GET /parlamentares (with filters)
-    if (method === 'GET') {
+    if (method === 'GET' && !id) {
         let filtered = [...MOCK_PARLAMENTARES];
 
         if (params) {
@@ -199,14 +235,48 @@ function handleFavoritos(route: ParsedRoute): any {
 /**
  * Handle /alertas endpoints
  */
-function handleAlertas(route: ParsedRoute): any {
+function handleAlertas(route: ParsedRoute, body?: any): any {
     const { id, action, method } = route;
+
+    // POST /alertas/:id/ativar
+    if (id && action === 'ativar' && method === 'POST') {
+        const alerta = MOCK_ALERTAS.find(a => a.id === id);
+        if (!alerta) throw new Error('Alerta não encontrado');
+        alerta.ativo = true;
+        return { success: true, alerta };
+    }
+
+    // POST /alertas/:id/desativar
+    if (id && action === 'desativar' && method === 'POST') {
+        const alerta = MOCK_ALERTAS.find(a => a.id === id);
+        if (!alerta) throw new Error('Alerta não encontrado');
+        alerta.ativo = false;
+        return { success: true, alerta };
+    }
 
     // POST /alertas/:id/read
     if (id && action === 'read' && method === 'POST') {
         const alerta = MOCK_ALERTAS.find(a => a.id === id);
-        if (alerta) alerta.read = true;
+        if (!alerta) throw new Error('Alerta não encontrado');
+        alerta.read = true;
         return { success: true };
+    }
+
+    // GET /alertas/:id
+    if (id && method === 'GET' && !action) {
+        const alerta = MOCK_ALERTAS.find(a => a.id === id);
+        if (!alerta) throw new Error('Alerta não encontrado');
+        return alerta;
+    }
+
+    // PUT /alertas/:id
+    if (id && method === 'PUT') {
+        const alerta = MOCK_ALERTAS.find(a => a.id === id);
+        if (!alerta) throw new Error('Alerta não encontrado');
+        // Update alerta with body data
+        if (body?.termo) alerta.termo = body.termo;
+        if (body?.ativo !== undefined) alerta.ativo = body.ativo;
+        return alerta;
     }
 
     // DELETE /alertas/:id
@@ -219,25 +289,24 @@ function handleAlertas(route: ParsedRoute): any {
     }
 
     // POST /alertas (create)
-    if (method === 'POST') {
-        // Body would be in the request, but we'll create a mock one
+    if (method === 'POST' && !id) {
         const novoAlerta = {
             id: String(Date.now()),
-            termo: "Novo Termo",
+            termo: body?.termo || "Novo Termo",
             ativo: true,
             read: false,
             created_at: new Date().toISOString(),
             type: "normal" as const,
-            category: "Geral",
-            title: "Novo Alerta",
-            message: "Alerta criado com sucesso"
+            category: body?.category || "Geral",
+            title: body?.title || "Novo Alerta",
+            message: body?.message || "Alerta criado com sucesso"
         };
         MOCK_ALERTAS.push(novoAlerta);
         return novoAlerta;
     }
 
     // GET /alertas (list)
-    if (method === 'GET') {
+    if (method === 'GET' && !id) {
         return MOCK_ALERTAS;
     }
 
@@ -313,12 +382,125 @@ function handleCidadaos(route: ParsedRoute): any {
 }
 
 /**
+ * Handle /auth endpoints
+ */
+function handleAuth(route: ParsedRoute, body?: any): any {
+    const { action, method } = route;
+
+    // POST /auth/login
+    if (action === 'login' && method === 'POST') {
+        // Mock successful login
+        return {
+            token: `mock_token_${Date.now()}`,
+            user: {
+                id: "1",
+                nome: "Maria da Silva",
+                email: body?.email || "maria@email.com",
+                contato: "(11) 99999-9999",
+                faixa_etaria: "25-34",
+                regiao: "Sudeste",
+                preferencia_midia: "texto"
+            }
+        };
+    }
+
+    // POST /auth/register
+    if (action === 'register' && method === 'POST') {
+        return {
+            token: `mock_token_${Date.now()}`,
+            user: {
+                id: String(Date.now()),
+                nome: body?.nome || "Novo Usuário",
+                email: body?.email || "usuario@email.com",
+                contato: body?.contato || "(11) 99999-9999",
+                faixa_etaria: body?.faixa_etaria,
+                regiao: body?.regiao,
+                preferencia_midia: body?.preferencia_midia || "texto"
+            }
+        };
+    }
+
+    // GET /auth/me
+    if (action === 'me' && method === 'GET') {
+        return {
+            id: "1",
+            nome: "Maria da Silva",
+            email: "maria@email.com",
+            contato: "(11) 99999-9999",
+            faixa_etaria: "25-34",
+            regiao: "Sudeste",
+            preferencia_midia: "texto"
+        };
+    }
+
+    // POST /auth/refresh
+    if (action === 'refresh' && method === 'POST') {
+        return {
+            token: `mock_token_refreshed_${Date.now()}`
+        };
+    }
+
+    throw new Error('Endpoint não suportado');
+}
+
+/**
  * Handle /estatisticas endpoints
  */
 function handleEstatisticas(route: ParsedRoute): any {
-    if (route.method === 'GET') {
+    const { action, method } = route;
+
+    // GET /estatisticas/leis
+    if (action === 'leis' && method === 'GET') {
+        return {
+            total: 1247,
+            por_tipo: {
+                "PL": 890,
+                "PEC": 234,
+                "PLP": 123
+            },
+            por_status: {
+                "Em tramitação": 567,
+                "Aprovadas": 234,
+                "Arquivadas": 446
+            },
+            por_ano: {
+                "2024": 156,
+                "2023": 234,
+                "2022": 198
+            }
+        };
+    }
+
+    // GET /estatisticas/cidadaos
+    if (action === 'cidadaos' && method === 'GET') {
+        return {
+            total: 15834,
+            por_regiao: {
+                "Sudeste": 6234,
+                "Sul": 3456,
+                "Nordeste": 4123,
+                "Norte": 1234,
+                "Centro-Oeste": 787
+            },
+            por_faixa_etaria: {
+                "18-24": 2345,
+                "25-34": 5678,
+                "35-44": 3456,
+                "45-54": 2345,
+                "55+": 2010
+            },
+            por_preferencia_midia: {
+                "texto": 9234,
+                "voz": 6600
+            }
+        };
+    }
+
+    // GET /estatisticas (general)
+    if (method === 'GET' && !action) {
         return MOCK_ESTATISTICAS;
     }
+
     throw new Error('Endpoint não suportado');
 }
 
@@ -340,6 +522,17 @@ export async function mockFetch<T>(
 
     try {
         const route = parseEndpoint(endpoint, options?.method);
+
+        // Parse body for POST/PUT requests
+        let body: any;
+        if (options?.body && typeof options.body === 'string') {
+            try {
+                body = JSON.parse(options.body);
+            } catch {
+                body = {};
+            }
+        }
+
         let data: any;
 
         // Route to appropriate handler
@@ -354,13 +547,16 @@ export async function mockFetch<T>(
                 data = handleFavoritos(route);
                 break;
             case 'alertas':
-                data = handleAlertas(route);
+                data = handleAlertas(route, body);
                 break;
             case 'preferencias-temas':
                 data = handlePreferencias(route);
                 break;
             case 'cidadao':
                 data = handleCidadaos(route);
+                break;
+            case 'auth':
+                data = handleAuth(route, body);
                 break;
             case 'estatisticas':
                 data = handleEstatisticas(route);

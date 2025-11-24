@@ -5,6 +5,18 @@ import { AuthUser, LoginCredentials, RegisterData, AuthResponse } from "./auth";
  * Helper for making authenticated requests
  */
 async function authFetch<T>(endpoint: string, options?: RequestInit): Promise<T> {
+    // ============================================================================
+    // MOCK INTERCEPTOR - Activated when NEXT_PUBLIC_USE_MOCKS=true
+    // ============================================================================
+    if (process.env.NEXT_PUBLIC_USE_MOCKS === 'true') {
+        console.log('[AUTH-API] Using MOCK data (NEXT_PUBLIC_USE_MOCKS=true)');
+        const { mockFetch } = await import('./mocks');
+        return mockFetch<T>(endpoint, options);
+    }
+
+    // ============================================================================
+    // ORIGINAL CODE (Preserved)
+    // ============================================================================
     const res = await fetch(`${API_BASE_URL}${endpoint}`, {
         ...options,
         headers: {

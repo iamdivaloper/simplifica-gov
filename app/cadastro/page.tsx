@@ -6,13 +6,15 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
-import { ArrowRight, Check, Loader2, MessageSquare, Sparkles, AlertCircle } from "lucide-react"
+import { ArrowRight, Check, Loader2, MessageSquare, Sparkles, AlertCircle, CheckCircle2, XCircle } from "lucide-react"
 import Link from "next/link"
 import { auth } from "@/lib/auth"
 import { useRouter } from "next/navigation"
+import { useToast } from "@/hooks/use-toast"
 
 export default function CadastroPage() {
   const router = useRouter()
+  const { toast } = useToast()
   const [step, setStep] = useState<"form" | "otp" | "success">("form")
   const [isLoading, setIsLoading] = useState(false)
   const [formData, setFormData] = useState({
@@ -63,6 +65,17 @@ export default function CadastroPage() {
     setTimeout(() => {
       setIsLoading(false)
       setStep("otp")
+
+      toast({
+        title: (
+          <div className="flex items-center gap-2">
+            <CheckCircle2 className="h-5 w-5 text-green-600" />
+            <span>Código enviado!</span>
+          </div>
+        ),
+        description: `Enviamos um código de verificação para ${formData.whatsapp}. Confira seu WhatsApp!`,
+        className: "border-green-200 bg-green-50",
+      })
     }, 1500)
   }
 
@@ -79,10 +92,31 @@ export default function CadastroPage() {
         preferencia_midia: "texto"
       })
 
+      toast({
+        title: (
+          <div className="flex items-center gap-2">
+            <CheckCircle2 className="h-5 w-5 text-green-600" />
+            <span>Conta criada com sucesso!</span>
+          </div>
+        ),
+        description: `Bem-vindo, ${formData.name}! Você receberá sua primeira explicação em breve no WhatsApp.`,
+        className: "border-green-200 bg-green-50",
+      })
+
       setStep("success")
-    } catch (error) {
+    } catch (error: any) {
       console.error("Registration failed:", error)
-      // Handle error (show message to user)
+
+      toast({
+        title: (
+          <div className="flex items-center gap-2">
+            <XCircle className="h-5 w-5 text-red-600" />
+            <span>Não conseguimos criar sua conta</span>
+          </div>
+        ),
+        description: error.message || "Verifique sua conexão e tente novamente. Se o problema persistir, entre em contato conosco.",
+        variant: "destructive",
+      })
     } finally {
       setIsLoading(false)
     }

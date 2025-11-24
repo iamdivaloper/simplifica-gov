@@ -5,24 +5,33 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import Link from "next/link"
-import { ArrowLeft, MessageCircle, AlertCircle } from "lucide-react"
+import { ArrowLeft, MessageCircle, CheckCircle2, XCircle } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { auth } from "@/lib/auth"
+import { useToast } from "@/hooks/use-toast"
 
 export default function LoginPage() {
   const router = useRouter()
+  const { toast } = useToast()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const [error, setError] = useState("")
   const [isLoading, setIsLoading] = useState(false)
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
-    setError("")
     setIsLoading(true)
 
     if (!email || !password) {
-      setError("Ops! Parece que você esqueceu de preencher algo. Dá uma olhadinha? 😉")
+      toast({
+        title: (
+          <div className="flex items-center gap-2">
+            <XCircle className="h-5 w-5 text-orange-600" />
+            <span>Ops! Faltou algo</span>
+          </div>
+        ),
+        description: "Por favor, preencha seu e-mail e senha para continuar. 😉",
+        variant: "destructive",
+      })
       setIsLoading(false)
       return
     }
@@ -30,14 +39,34 @@ export default function LoginPage() {
     try {
       await auth.login({ email, senha: password })
 
+      toast({
+        title: (
+          <div className="flex items-center gap-2">
+            <CheckCircle2 className="h-5 w-5 text-green-600" />
+            <span>Bem-vindo de volta!</span>
+          </div>
+        ),
+        description: "Login realizado com sucesso. Redirecionando...",
+        className: "border-green-200 bg-green-50",
+      })
+
       // Check for redirect destination
       const redirectPath = sessionStorage.getItem("redirectAfterLogin") || "/perfil"
       sessionStorage.removeItem("redirectAfterLogin")
 
-      router.push(redirectPath)
+      setTimeout(() => router.push(redirectPath), 500)
     } catch (err: any) {
       console.error("Login error:", err)
-      setError(err.message || "Não encontramos essa conta. Que tal conferir se digitou certinho?")
+      toast({
+        title: (
+          <div className="flex items-center gap-2">
+            <XCircle className="h-5 w-5 text-red-600" />
+            <span>Não conseguimos fazer login</span>
+          </div>
+        ),
+        description: err.message || "Verifique seu e-mail e senha e tente novamente. Se o problema persistir, entre em contato conosco.",
+        variant: "destructive",
+      })
     } finally {
       setIsLoading(false)
     }
@@ -110,9 +139,7 @@ export default function LoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="ex: maria@email.com"
-                  className={`h-12 border-gray-200 bg-gray-50 focus:bg-white transition-all ${error ? "border-red-300 bg-red-50" : ""} focus:ring-2 focus:ring-blue-100 focus:border-blue-500 rounded-xl`}
-                  aria-invalid={!!error}
-                  aria-describedby={error ? "login-error" : undefined}
+                  className="h-12 border-gray-200 bg-gray-50 focus:bg-white transition-all focus:ring-2 focus:ring-blue-100 focus:border-blue-500 rounded-xl"
                   autoComplete="email"
                   required
                 />
@@ -136,24 +163,11 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className={`h-12 border-gray-200 bg-gray-50 focus:bg-white transition-all ${error ? "border-red-300 bg-red-50" : ""} focus:ring-2 focus:ring-blue-100 focus:border-blue-500 rounded-xl`}
-                  aria-invalid={!!error}
-                  aria-describedby={error ? "login-error" : undefined}
+                  className="h-12 border-gray-200 bg-gray-50 focus:bg-white transition-all focus:ring-2 focus:ring-blue-100 focus:border-blue-500 rounded-xl"
                   autoComplete="current-password"
                   required
                 />
               </div>
-
-              {error && (
-                <div
-                  id="login-error"
-                  role="alert"
-                  className="flex items-start gap-3 text-red-600 text-sm bg-red-50 p-4 rounded-xl border border-red-100 animate-in fade-in slide-in-from-top-2"
-                >
-                  <AlertCircle className="h-5 w-5 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                  <p className="font-medium">{error}</p>
-                </div>
-              )}
 
               <Button
                 type="submit"
