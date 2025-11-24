@@ -31,10 +31,7 @@ export default function DailySummary() {
       } else {
         audioRef.current.play()
         toast({
-          title: <div className="flex items-center gap-2">
-            <PlayCircle className="h-5 w-5 text-blue-600" />
-            <span>Reproduzindo resumo</span>
-          </div>,
+          title: "Reproduzindo resumo",
           description: "Ouça as principais atualizações de hoje! 🎧",
           className: "border-blue-200 bg-blue-50",
         })
@@ -46,10 +43,7 @@ export default function DailySummary() {
   const handleAudioEnded = () => {
     setIsPlaying(false)
     toast({
-      title: <div className="flex items-center gap-2">
-        <CheckCircle2 className="h-5 w-5 text-green-600" />
-        <span>Resumo concluído!</span>
-      </div>,
+      title: "Resumo concluído!",
       description: "Você está por dentro de tudo! 🎉",
       className: "border-green-200 bg-green-50",
     })
@@ -63,10 +57,7 @@ export default function DailySummary() {
       navigator.share({ title, text, url })
         .then(() => {
           toast({
-            title: <div className="flex items-center gap-2">
-              <Share2 className="h-5 w-5 text-blue-600" />
-              <span>Compartilhado!</span>
-            </div>,
+            title: "Compartilhado!",
             description: "Obrigado por espalhar informação de qualidade! 🙌",
             className: "border-blue-200 bg-blue-50",
           })
@@ -93,10 +84,7 @@ export default function DailySummary() {
     setPollVote(vote)
 
     toast({
-      title: <div className="flex items-center gap-2">
-        <CheckCircle2 className="h-5 w-5 text-green-600" />
-        <span>Voto registrado!</span>
-      </div>,
+      title: "Voto registrado!",
       description: vote === 'sim'
         ? "Sua opinião foi contabilizada. Você votou SIM 👍"
         : "Sua opinião foi contabilizada. Você votou NÃO 👎",
@@ -108,10 +96,7 @@ export default function DailySummary() {
     setNotificationsEnabled(true)
 
     toast({
-      title: <div className="flex items-center gap-2">
-        <CheckCircle2 className="h-5 w-5 text-green-600" />
-        <span>Notificações ativadas!</span>
-      </div>,
+      title: "Notificações ativadas!",
       description: "Você receberá atualizações importantes no WhatsApp 📱",
       className: "border-green-200 bg-green-50",
     })

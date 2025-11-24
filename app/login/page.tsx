@@ -23,12 +23,7 @@ export default function LoginPage() {
 
     if (!email || !password) {
       toast({
-        title: (
-          <div className="flex items-center gap-2">
-            <XCircle className="h-5 w-5 text-orange-600" />
-            <span>Ops! Faltou algo</span>
-          </div>
-        ),
+        title: "Ops! Faltou algo",
         description: "Por favor, preencha seu e-mail e senha para continuar. 😉",
         variant: "destructive",
       })
@@ -40,12 +35,7 @@ export default function LoginPage() {
       await auth.login({ email, senha: password })
 
       toast({
-        title: (
-          <div className="flex items-center gap-2">
-            <CheckCircle2 className="h-5 w-5 text-green-600" />
-            <span>Bem-vindo de volta!</span>
-          </div>
-        ),
+        title: "Bem-vindo de volta!",
         description: "Login realizado com sucesso. Redirecionando...",
         className: "border-green-200 bg-green-50",
       })
@@ -58,12 +48,7 @@ export default function LoginPage() {
     } catch (err: any) {
       console.error("Login error:", err)
       toast({
-        title: (
-          <div className="flex items-center gap-2">
-            <XCircle className="h-5 w-5 text-red-600" />
-            <span>Não conseguimos fazer login</span>
-          </div>
-        ),
+        title: "Não conseguimos fazer login",
         description: err.message || "Verifique seu e-mail e senha e tente novamente. Se o problema persistir, entre em contato conosco.",
         variant: "destructive",
       })

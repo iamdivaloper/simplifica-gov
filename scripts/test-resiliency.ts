@@ -1,5 +1,5 @@
 import { fetchGovernmentData } from '../lib/data-service';
-import * as dotenv from 'dotenv';
+const dotenv = require('dotenv');
 
 // Load env vars
 dotenv.config({ path: '.env.local' });
@@ -24,11 +24,11 @@ async function runTest() {
 
     if (results.length > 0) {
         console.log('\nSources found:');
-        const sources = new Set(results.map(r => r.source));
-        sources.forEach(s => console.log(`- ${s}`));
+        const sources = new Set(results.map((r: any) => r.source));
+        sources.forEach((s: any) => console.log(`- ${s}`));
 
         console.log('\nFirst 3 items:');
-        results.slice(0, 3).forEach(item => {
+        results.slice(0, 3).forEach((item: any) => {
             console.log(`[${item.source}] ${item.title}`);
         });
     } else {

@@ -67,12 +67,7 @@ export default function CadastroPage() {
       setStep("otp")
 
       toast({
-        title: (
-          <div className="flex items-center gap-2">
-            <CheckCircle2 className="h-5 w-5 text-green-600" />
-            <span>Código enviado!</span>
-          </div>
-        ),
+        title: "Código enviado!",
         description: `Enviamos um código de verificação para ${formData.whatsapp}. Confira seu WhatsApp!`,
         className: "border-green-200 bg-green-50",
       })
@@ -93,12 +88,7 @@ export default function CadastroPage() {
       })
 
       toast({
-        title: (
-          <div className="flex items-center gap-2">
-            <CheckCircle2 className="h-5 w-5 text-green-600" />
-            <span>Conta criada com sucesso!</span>
-          </div>
-        ),
+        title: "Conta criada com sucesso!",
         description: `Bem-vindo, ${formData.name}! Você receberá sua primeira explicação em breve no WhatsApp.`,
         className: "border-green-200 bg-green-50",
       })
@@ -108,12 +98,7 @@ export default function CadastroPage() {
       console.error("Registration failed:", error)
 
       toast({
-        title: (
-          <div className="flex items-center gap-2">
-            <XCircle className="h-5 w-5 text-red-600" />
-            <span>Não conseguimos criar sua conta</span>
-          </div>
-        ),
+        title: "Não conseguimos criar sua conta",
         description: error.message || "Verifique sua conexão e tente novamente. Se o problema persistir, entre em contato conosco.",
         variant: "destructive",
       })

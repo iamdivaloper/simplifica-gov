@@ -103,25 +103,15 @@ export default function ConfiguracoesPage() {
             setInitialInterests(selectedInterests)
 
             toast({
-                title: (
-                    <div className="flex items-center gap-2">
-                        <CheckCircle2 className="h-5 w-5 text-green-600" />
-                        <span>Tudo certo!</span>
-                    </div>
-                ),
+                title: "Tudo certo!",
                 description: `Suas preferências foram salvas. Agora você receberá alertas sobre ${selectedInterests.length} ${selectedInterests.length === 1 ? 'tema' : 'temas'} que importam para você.`,
                 className: "border-green-200 bg-green-50",
             })
         } catch (error) {
             console.error("Failed to save preferences", error)
             toast({
-                title: (
-                    <div className="flex items-center gap-2">
-                        <XCircle className="h-5 w-5 text-red-600" />
-                        <span>Não conseguimos salvar</span>
-                    </div>
-                ),
-                description: "Verifique sua conexão e tente novamente. Se o problema persistir, entre em contato conosco.",
+                title: "Não foi possível salvar",
+                description: "Verifique sua conexão e tente novamente.",
                 variant: "destructive",
             })
         } finally {

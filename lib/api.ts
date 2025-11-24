@@ -29,6 +29,8 @@ export interface Lei {
         pontos_negativos: string[];
     };
     expires_at?: string;
+    data?: string; // optional field for UI display
+    explicacao?: string; // optional field for UI display
 }
 
 export interface Cidadao {
